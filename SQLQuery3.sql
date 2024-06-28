@@ -21,7 +21,7 @@ create table Products
 (
 	Id INT PRIMARY KEY IDENTITY(1,1),
     Name NVARCHAR(Max) NOT NULL,
-	Image NVARCHAR(Max) NOT NULL,
+	ImagePath NVARCHAR(Max) NOT NULL,
 	Price Money NOT NULL,
 	Size NVARCHAR(Max) NOT NULL,
 	Description NVARCHAR(Max) NOT NULL,
