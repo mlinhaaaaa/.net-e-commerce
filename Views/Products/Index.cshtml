@@ -1,0 +1,239 @@
+﻿@model IEnumerable<e_commmerce.Entities.Product>
+
+@{
+    ViewData["Title"] = "Index";
+    var categories = ViewData["Categories"] as IEnumerable<e_commmerce.Entities.Category>;
+}
+
+<h1>Products</h1>
+
+<p>
+    <a data-bs-toggle="modal" data-bs-target="#createModal" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Price</th>
+            <th>Size</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.ImagePath))
+                    {
+                        <img src="@item.ImagePath" alt="@item.Name" style="width: 100px; height: auto;" />
+                    }
+                </td>
+                <td>@item.Price VND</td>
+                <td>@item.Size</td>
+                <td>@item.Description</td>
+                <td>@item.Cate?.Name</td>
+                <td>
+                    <a data-bs-toggle="modal" data-bs-target="#editModal" class="btn btn-warning" onclick="editProduct('@item.Id', '@item.Name', '@item.Price', '@item.Size', '@item.Description', '@item.CateId')"><i class="fas fa-edit"></i></a>
+                    <a class="btn btn-danger" onclick="deleteProduct('@item.Id')"><i class="fas fa-trash-alt"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Create Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Create Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="createForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="productName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="productImage" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="productImage">
+                    </div>
+                    <div class="mb-3">
+                        <label for="productPrice" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="productPrice" step="0.001">
+                    </div>
+                    <div class="mb-3">
+                        <label for="productSize" class="form-label">Size</label>
+                        <select class="form-control" id="productSize">
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="productDescription"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoryId" class="form-label">Category</label>
+                        <select id="categoryId" class="form-control">
+                            @foreach (var category in categories)
+                            {
+                                <option value="@category.Cid">@category.Name</option>
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i></button>
+                <button type="button" class="btn btn-primary" onclick="createProduct()"><i class="fas fa-check"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" enctype="multipart/form-data">
+                    <input type="hidden" id="productId_edit">
+                    <div class="mb-3">
+                        <label for="productName_edit" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="productName_edit">
+                    </div>
+                    <div class="mb-3">
+                        <label for="productImage_edit" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="productImage_edit">
+                    </div>
+                    <div class="mb-3">
+                        <label for="productPrice_edit" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="productPrice_edit" step="0.01">
+                    </div>
+                    <div class="mb-3">
+                        <label for="productSize_edit" class="form-label">Size</label>
+                        <select class="form-control" id="productSize_edit">
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productDescription_edit" class="form-label">Description</label>
+                        <textarea class="form-control" id="productDescription_edit"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoryId_edit" class="form-label">Category</label>
+                        <select id="categoryId_edit" class="form-control">
+                            @foreach (var category in categories)
+                            {
+                                <option value="@category.Cid">@category.Name</option>
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i></button>
+                <button type="button" class="btn btn-primary" onclick="saveProduct()"><i class="fas fa-check"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function createProduct() {
+            var formData = new FormData();
+            formData.append("name", $("#productName").val());
+            formData.append("imageFile", $("#productImage")[0].files[0]);
+            formData.append("price", $("#productPrice").val());
+            formData.append("size", $("#productSize").val());
+            formData.append("description", $("#productDescription").val());
+            formData.append("cateId", $("#categoryId").val());
+
+            $.ajax({
+                url: "/Products/Create",
+                type: "post",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    window.location.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+
+        function editProduct(id, name, price, size, description, cateId) {
+            $("#productId_edit").val(id);
+            $("#productName_edit").val(name);
+            $("#productPrice_edit").val(price);
+            $("#productSize_edit").val(size);
+            $("#productDescription_edit").val(description);
+            $("#categoryId_edit").val(cateId);
+        }
+
+        function saveProduct() {
+            var formData = new FormData();
+            formData.append("id", $("#productId_edit").val());
+            formData.append("name", $("#productName_edit").val());
+            formData.append("imageFile", $("#productImage_edit")[0].files[0]);
+            formData.append("price", $("#productPrice_edit").val());
+            formData.append("size", $("#productSize_edit").val());
+            formData.append("description", $("#productDescription_edit").val());
+            formData.append("cateId", $("#categoryId_edit").val());
+
+            $.ajax({
+                url: "/Products/Edit",
+                type: "post",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    window.location.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+
+        function deleteProduct(id) {
+            $.ajax({
+                url: "/Products/Delete",
+                type: "post",
+                data: {
+                    id: id
+                },
+                success: function (response) {
+                    window.location.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+    </script>
+}

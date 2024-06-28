@@ -47,7 +47,6 @@ public partial class ShopContext : DbContext
 
             entity.Property(e => e.CateId).HasColumnName("cateID");
             entity.Property(e => e.Price).HasColumnType("money");
-            entity.Property(e => e.Title).HasColumnName("title");
 
             entity.HasOne(d => d.Cate).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CateId)

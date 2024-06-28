@@ -1,0 +1,140 @@
+﻿@model IEnumerable<e_commmerce.Entities.Category>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_LayoutAdmin";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a data-bs-toggle="modal" data-bs-target="#createModal" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Cid</td>
+                <td>@item.Name</td>
+                <td>
+                    <a data-bs-toggle="modal" data-bs-target="#editModal" class="btn btn-warning" onclick="editCategory('@item.Cid', '@item.Name')"><i class="fas fa-edit"></i></a>
+                    <a class="btn btn-danger" onclick="deleteCategory('@item.Cid')"><i class="fas fa-trash-alt"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Create Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Create Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="categoryName">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i></button>
+                <button type="button" class="btn btn-primary" onclick="createCategory()"><i class="fas fa-check"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" id="categoryId_edit">
+                    <div class="mb-3">
+                        <label for="categoryName_edit" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="categoryName_edit">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i></button>
+                <button type="button" class="btn btn-primary" onclick="editCategory()"><i class="fas fa-check"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function createCategory() {
+        $.ajax({
+            url: "/Categories/Create",
+            type: "post",
+            data: {
+                name: $("#categoryName").val()
+            },
+            success: function (response) {
+                window.location.reload();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    }
+
+    function editCategory(id, name) {
+        $("#categoryId_edit").val(id);
+        $("#categoryName_edit").val(name);
+    }
+
+    function saveCategory() {
+        $.ajax({
+            url: "/Categories/Edit",
+            type: "post",
+            data: {
+                id: $("#categoryId_edit").val(),
+                name: $("#categoryName_edit").val()
+            },
+            success: function (response) {
+                window.location.reload();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    }
+
+    function deleteCategory(id) {
+        $.ajax({
+            url: "/Categories/Delete",
+            type: "post",
+            data: {
+                id: id
+            },
+            success: function (response) {
+                window.location.reload();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    }
+</script>
