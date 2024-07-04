@@ -131,22 +131,20 @@
                                 <nav>
                                     <ul>
                                         <li class="active">
-                                            <a href="index.html">Home</a>
-                                            <div class="mega_menu jewelry">
-                                                <div class="mega_items jewelry">
-                                                    <ul>
-                                                        <li><a href="index.html">Home 1</a></li>
-                                                        <li><a href="index-2.html">Home 2</a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
+                                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                                <span>Home</span>
+                                            </a>
                                         </li>
                                         <li>
                                             <a href="shop.html">shop</a>
                                             <div class="mega_menu jewelry">
                                                 <div class="mega_items jewelry">
                                                     <ul>
-                                                        <li><a href="shop-list.html">shop list</a></li>
+                                                        <li>
+                                                            <a class="nav-link" asp-area="" asp-controller="Products" asp-action="ShopList">
+                                                                Shoplist
+                                                            </a>
+                                                        </li>
                                                         <li><a href="shop-fullwidth.html">shop Full Width Grid</a></li>
                                                         <li><a href="shop-fullwidth-list.html">shop Full Width list</a></li>
                                                         <li><a href="shop-sidebar.html">shop Right Sidebar</a></li>
