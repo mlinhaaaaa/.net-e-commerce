@@ -73,7 +73,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="productSize" class="form-label">Size</label>
-                        <select class="form-control" id="productSize">
+                        <select class="form-control" id="productSize" multiple>
                             <option value="XS">XS</option>
                             <option value="S">S</option>
                             <option value="M">M</option>
@@ -125,11 +125,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="productPrice_edit" class="form-label">Price</label>
-                        <input type="number" class="form-control" id="productPrice_edit" step="0.01">
+                        <input type="number" class="form-control" id="productPrice_edit" step="0.001" />
                     </div>
                     <div class="mb-3">
                         <label for="productSize_edit" class="form-label">Size</label>
-                        <select class="form-control" id="productSize_edit">
+                        <select class="form-control" id="productSize_edit" multiple>
                             <option value="XS">XS</option>
                             <option value="S">S</option>
                             <option value="M">M</option>
@@ -137,6 +137,7 @@
                             <option value="XL">XL</option>
                         </select>
                     </div>
+
                     <div class="mb-3">
                         <label for="productDescription_edit" class="form-label">Description</label>
                         <textarea class="form-control" id="productDescription_edit"></textarea>
