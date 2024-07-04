@@ -115,5 +115,11 @@ namespace e_commmerce.Controllers
             _context.SaveChanges();
             return Ok();
         }
+        public IActionResult ShopList()
+        {
+            var products = _context.Products.Include(p => p.Cate).ToList();
+            return View(products);
+        }
+
     }
 }
