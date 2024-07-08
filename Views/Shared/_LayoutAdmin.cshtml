@@ -95,9 +95,9 @@
                             <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                                 <div class="bg-white py-2 collapse-inner rounded">
                                     <h6 class="collapse-header">Login Screens:</h6>
-                                    <a class="collapse-item" href="login.html">Login</a>
-                                    <a class="collapse-item" href="register.html">Register</a>
-                                    <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+                                    <a asp-controller="Access" asp-action="Login">Login</a>
+                                    <a asp-controller="Access" asp-action="Register">Register</a>
+                                    <a asp-controller="Access" asp-action="ForgotPassword">Forgot Password</a>
                                     <div class="collapse-divider"></div>
                                     <h6 class="collapse-header">Other Pages:</h6>
                                     <a class="collapse-item" href="404.html">404 Page</a>
@@ -125,7 +125,7 @@
                                 <div class="bg-white py-2 collapse-inner rounded">
                                     <a class="collapse-item" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
                                     <a class="collapse-item" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
-                                    <a class="collapse-item" asp-area="" asp-controller="Acount" asp-action="Index">Accounts</a>
+                                    <a class="collapse-item" asp-area="" asp-controller="Accounts" asp-action="Index">Accounts</a>
                                 </div>
                             </div>
                         </li>
