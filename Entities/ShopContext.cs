@@ -31,6 +31,8 @@ public partial class ShopContext : DbContext
         {
             entity.HasKey(e => e.Uid).HasName("PK__Accounts__C5B69A4AFC105B6D");
 
+            entity.Property(e => e.FirstName).HasMaxLength(50);
+            entity.Property(e => e.LastName).HasMaxLength(50);
             entity.Property(e => e.Pass).HasColumnName("pass");
         });
 

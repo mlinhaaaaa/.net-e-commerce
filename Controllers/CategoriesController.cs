@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using e_commmerce.Entities;
+using e_commmerce.Entities.Authentication;
 
 namespace e_commmerce.Controllers
 {
@@ -13,7 +14,7 @@ namespace e_commmerce.Controllers
         {
             _context = context;
         }
-
+        [AdminAuthentication]
         public IActionResult Index()
         {
             var data = _context.Categories.Include(c => c.Products).ToList();

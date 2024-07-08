@@ -6,6 +6,7 @@ using e_commmerce.Entities;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using e_commmerce.Entities.Authentication;
 
 namespace e_commmerce.Controllers
 {
@@ -19,7 +20,7 @@ namespace e_commmerce.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
-
+        [AdminAuthentication]
         public IActionResult Index()
         {
             var data = _context.Products.Include(p => p.Cate).ToList();

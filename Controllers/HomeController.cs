@@ -20,6 +20,7 @@ namespace e_commmerce.Controllers
             return View();
         }
 
+        [AdminAuthentication]
         public IActionResult Dashboard()
         {
             return View();
