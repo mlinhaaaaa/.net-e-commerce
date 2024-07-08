@@ -1,4 +1,6 @@
+using e_commmerce.Entities.Authentication;
 using e_commmerce.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -12,7 +14,7 @@ namespace e_commmerce.Controllers
         {
             _logger = logger;
         }
-
+        [Authentication]
         public IActionResult Index()
         {
             return View();
