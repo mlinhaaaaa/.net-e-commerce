@@ -1,0 +1,46 @@
+﻿@model List<e_commmerce.Entities.Product>
+
+@{
+    Layout = "_Layout";
+    var category = ViewData["ProductsofCategory"] as e_commmerce.Entities.Category;
+}
+
+<div class="container">
+    <h2>Products in @category.Name </h2>
+
+    @if (!Model.Any())
+    {
+        <p>No products available for this category.</p>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var product in Model)
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="single_product">
+                        <div class="product_thumb">
+                            <a href="single-product.html"><img src="@product.ImagePath" alt="@product.Name"></a>
+                            <div class="img_icone">
+                                <img src="~/img/cart/span-new.png" alt="New">
+                            </div>
+                            <div class="product_action">
+                                <a href="single-product.html"> <i class="fa fa-shopping-cart"></i> Add to cart</a>
+                            </div>
+                        </div>
+                        <div class="product_content">
+                            <span class="product_price">$@product.Price</span>
+                            <h3 class="product_title"><a href="#">@product.Name</a></h3>
+                        </div>
+                        <div class="product_info">
+                            <ul>
+                                <li><a href="#" title="Add to Wishlist">Add to Wishlist</a></li>
+                                <li><a href="#" data-toggle="modal" data-target="#modal_box" title="Quick view">View Detail</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
