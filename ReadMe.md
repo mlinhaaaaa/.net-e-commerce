@@ -1,3 +1,4 @@
+-- Viết database
 -- Create Categories table
 CREATE TABLE dbo.Categories (
     Cid INT IDENTITY(1,1) NOT NULL,
@@ -32,3 +33,14 @@ CREATE TABLE dbo.Accounts (
     CONSTRAINT PK_Accounts PRIMARY KEY CLUSTERED (Uid)
 );
 GO
+-- thay đổi:
+/appsettings.json/
+ "ConnectionStrings": {
+   "ConnectionString": "Server=;Database=shop;Trusted_Connection=True; User Id=; Password=;TrustServerCertificate=True"
+ },
+
+ //
+     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=**DESKTOP-MC950J7\\NVMINH**;Database=**shop**;User Id=**sa**;Password=*******;TrustServerCertificate=True;Trusted_Connection=True;");
+-- run project
