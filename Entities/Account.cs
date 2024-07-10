@@ -13,8 +13,8 @@ public partial class Account
     public string User { get; set; } = null!;
 
     [Required(ErrorMessage = "Password is required")]
-    [StringLength(8, ErrorMessage = "Password cannot be longer than 8 characters")]
-    [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{1,8}$", ErrorMessage = "Password must be 8 characters long, contain at least one uppercase letter, one number, and one special character.")]
+    [StringLength(50, MinimumLength = 8, ErrorMessage = "Password must be between 8 and 50 characters")]
+    [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,50}$", ErrorMessage = "contain at least one uppercase letter, one number, and one special character.")]
     public string Pass { get; set; } = null!;
 
     [Compare("Pass", ErrorMessage = "Password and confirmation password do not match")]
