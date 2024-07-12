@@ -133,6 +133,41 @@
                             </div>
                         </div>
                         <!--banner slider start-->
+                        <!--New product start-->
+                        <div class="featured_product">
+                            <div class="block_title">
+                                <h3>New Products</h3>
+                            </div>
+                            <div class="row">
+                                @foreach (var product in (IEnumerable<e_commmerce.Entities.Product>)ViewData["Newproducts"])
+                                {
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="single_product">
+                                            <div class="product_thumb">
+                                                <a href="single-product.html"><img style="width:100%;height: 350px;object-fit: cover;" src="@product.ImagePath" alt="@product.Name"></a>
+                                                <div class="img_icone">
+                                                    <img src="~/img/cart/span-new.png" alt="New">
+                                                </div>
+                                                <div class="product_action">
+                                                    <a href="single-product.html"> <i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="product_content">
+                                                <span class="product_price">$@product.Price</span>
+                                                <h3 class="product_title"><a href="#">@product.Name</a></h3>
+                                            </div>
+                                            <div class="product_info">
+                                                <ul>
+                                                    <li><a href="#" title=" Add to Wishlist ">Add to Wishlist</a></li>
+                                                    <li><a href="#" data-toggle="modal" data-target="#modal_box" title="Quick view">View Detail</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <!--featured product end-->
                         <!--featured product start-->
                         <div class="featured_product">
                             <div class="block_title">
@@ -145,8 +180,8 @@
                                         <div class="single_product">
                                             <div class="product_thumb">
                                                 <a href="single-product.html"><img style="width:100%;height: 350px;object-fit: cover;" src="@product.ImagePath" alt="@product.Name"></a>
-                                                <div class="img_icone">
-                                                    <img src="~/img/cart/span-new.png" alt="New">
+                                                <div class="hot_img">
+                                                    <img src="~/img/cart/span-hot.png" alt="Hot">
                                                 </div>
                                                 <div class="product_action">
                                                     <a href="single-product.html"> <i class="fa fa-shopping-cart"></i> Add to cart</a>

@@ -23,6 +23,8 @@ namespace e_commmerce.Controllers
         public IActionResult Index()
         {
             var products = _context.Products.Include(p => p.Cate).ToList();
+            var Newproducts = _context.Products.OrderByDescending(p => p.Id).Take(6).Include(p => p.Cate).ToList();
+            ViewData["Newproducts"] = Newproducts;
             var categories = _context.Categories.ToList();
             ViewData["Categories"] = categories;
             return View(products);
