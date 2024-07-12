@@ -19,7 +19,7 @@ namespace e_commmerce.Controllers
             _logger = logger;
             _context = context;
         }
-        [Authentication]
+
         public IActionResult Index()
         {
             var products = _context.Products.Include(p => p.Cate).ToList();
@@ -28,7 +28,6 @@ namespace e_commmerce.Controllers
             return View(products);
         }
 
-        [Authentication]
         [Route("danh-muc/{name}")]
         public async Task<IActionResult> Category(string name)
         {

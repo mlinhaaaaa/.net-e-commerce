@@ -40,7 +40,6 @@ namespace e_commmerce.Controllers
                 if (userAccount != null)
                 {
                     HttpContext.Session.SetString("User", userAccount.User);
-                    HttpContext.Session.SetInt32("IsAdmin", userAccount.IsAdmin);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -69,7 +68,6 @@ namespace e_commmerce.Controllers
                     db.SaveChanges();
 
                     HttpContext.Session.SetString("User", account.User);
-                    HttpContext.Session.SetInt32("IsAdmin", account.IsAdmin);
 
                     return RedirectToAction("Index", "Home");
                 }
