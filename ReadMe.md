@@ -34,10 +34,7 @@ CREATE TABLE dbo.Accounts (
 );
 GO
 -- thay đổi:
-/appsettings.json/
- "ConnectionStrings": {
-   "ConnectionString": "Server=;Database=shop;Trusted_Connection=True; User Id=; Password=;TrustServerCertificate=True"
- },
+
 
  //
      protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
