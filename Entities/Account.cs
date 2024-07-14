@@ -29,4 +29,7 @@ public partial class Account
     public string LastName { get; set; } = null!;
 
     public int IsAdmin { get; set; }
+
+    public virtual ICollection<BillingAddress> BillingAddresses { get; set; } = new List<BillingAddress>();
+
 }

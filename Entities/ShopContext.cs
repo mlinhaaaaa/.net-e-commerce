@@ -17,6 +17,8 @@ public partial class ShopContext : DbContext
 
     public virtual DbSet<Account> Accounts { get; set; }
 
+    public virtual DbSet<BillingAddress> BillingAddresses { get; set; }
+
     public virtual DbSet<Category> Categories { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
@@ -34,6 +36,28 @@ public partial class ShopContext : DbContext
             entity.Property(e => e.FirstName).HasMaxLength(50);
             entity.Property(e => e.LastName).HasMaxLength(50);
             entity.Property(e => e.Pass).HasColumnName("pass");
+        });
+
+        modelBuilder.Entity<BillingAddress>(entity =>
+        {
+            entity.ToTable("BillingAddress");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.City).HasMaxLength(250);
+            entity.Property(e => e.CompanyName).HasMaxLength(250);
+            entity.Property(e => e.Country).HasMaxLength(250);
+            entity.Property(e => e.County).HasMaxLength(250);
+            entity.Property(e => e.Email).HasMaxLength(250);
+            entity.Property(e => e.FirstName).HasMaxLength(250);
+            entity.Property(e => e.LastName).HasMaxLength(250);
+            entity.Property(e => e.Phone).HasMaxLength(250);
+            entity.Property(e => e.Streetaddress).HasMaxLength(250);
+
+            entity.HasOne(d => d.AccountU).WithMany(p => p.BillingAddresses)
+                .HasForeignKey(d => d.AccountUid)
+                .HasConstraintName("FK_BillingAddress_Accounts");
         });
 
         modelBuilder.Entity<Category>(entity =>

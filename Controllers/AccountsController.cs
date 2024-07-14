@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using e_commmerce.Entities;
+using e_commmerce.Entities.Authentication;
 
 namespace e_commmerce.Controllers
 {
@@ -19,6 +20,7 @@ namespace e_commmerce.Controllers
         }
 
         // GET: Accounts
+        [AdminAuthentication]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Accounts.ToListAsync());
