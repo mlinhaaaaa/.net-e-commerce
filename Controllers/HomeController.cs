@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using NuGet.Protocol.Core.Types;
 
 namespace e_commmerce.Controllers
 {
@@ -68,9 +69,84 @@ namespace e_commmerce.Controllers
 
         public IActionResult Account()
         {
-            var Address = _context.BillingAddresses.FirstOrDefault();
-            return View(Address);
+            var userUid = HttpContext.Session.GetInt32("UserUid");
+
+            if (userUid == null)
+            {
+                // Log the fact that the session was null
+                Console.WriteLine("UserUid session is null");
+                return RedirectToAction("Login", "Access");
+            }
+
+            var account = _context.Accounts.FirstOrDefault(a => a.Uid == userUid);
+            if (account == null)
+            {
+                Console.WriteLine($"No account found with Uid: {userUid}");
+                return RedirectToAction("Login", "Access");
+            }
+
+            var billingAddress = _context.BillingAddresses.FirstOrDefault(b => b.AccountUid == account.Uid);
+            if (billingAddress == null)
+            {
+                Console.WriteLine($"No billing address found for AccountUid: {account.Uid}");
+                return RedirectToAction("Login", "Access");
+            }
+
+            return View(billingAddress);
         }
+
+        [HttpPost]
+        public IActionResult UpdateBillingAddress(BillingAddress model)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingAddress = _context.BillingAddresses.Find(model.Id);
+                if (existingAddress != null)
+                {
+                    existingAddress.FirstName = model.FirstName;
+                    existingAddress.LastName = model.LastName;
+                    existingAddress.CompanyName = model.CompanyName;
+                    existingAddress.Country = model.Country;
+                    existingAddress.Streetaddress = model.Streetaddress;
+                    existingAddress.City = model.City;
+                    existingAddress.County = model.County;
+                    existingAddress.Phone = model.Phone;
+                    existingAddress.Email = model.Email;
+
+                    _context.SaveChanges();
+                }
+                return RedirectToAction("Account", "Home");
+            }
+            return View("Account", _context.BillingAddresses);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateAccountDetails(Account model)
+        {
+            var userUid = HttpContext.Session.GetInt32("UserUid");
+            if (userUid == null)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
+            var account = _context.Accounts.FirstOrDefault(a => a.Uid == userUid);
+            if (account == null)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
+            // Update account details
+            account.FirstName = model.FirstName;
+            account.LastName = model.LastName;
+            account.Email = model.Email;
+            account.Pass = model.Pass;
+            account.Birthdate = model.Birthdate;
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Account", "Home");
+        }
+
 
         public async Task<IActionResult> Search(string searchString)
         {

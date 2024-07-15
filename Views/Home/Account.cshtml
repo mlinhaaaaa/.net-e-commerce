@@ -1,6 +1,7 @@
 ﻿@model e_commmerce.Entities.BillingAddress
+
 @{
-    ViewData["Title"] = "Acount";
+    ViewData["Title"] = "Account";
     Layout = "_Layout";
 }
 
@@ -19,7 +20,6 @@
                                 <li><i class="fa fa-angle-right"></i></li>
                                 <li>my account</li>
                             </ul>
-
                         </div>
                     </div>
                 </div>
@@ -44,8 +44,8 @@
                             <!-- Tab panes -->
                             <div class="tab-content dashboard_content">
                                 <div class="tab-pane fade show active" id="dashboard">
-                                    <h3>Dashboard </h3>
-                                    <p>From your account dashboard. you can easily check &amp; view your <a href="#">recent orders</a>, manage your <a href="#">shipping and billing addresses</a> and <a href="#">Edit your password and account details.</a></p>
+                                    <h3>Dashboard</h3>
+                                    <p>From your account dashboard. you can easily check & view your <a href="#">recent orders</a>, manage your <a href="#">shipping and billing addresses</a> and <a href="#">Edit your password and account details.</a></p>
                                 </div>
                                 <div class="tab-pane fade" id="orders">
                                     <h3>Orders</h3>
@@ -65,14 +65,14 @@
                                                     <td>1</td>
                                                     <td>May 10, 2018</td>
                                                     <td><span class="success">Completed</span></td>
-                                                    <td>$25.00 for 1 item </td>
+                                                    <td>$25.00 for 1 item</td>
                                                     <td><a href="cart.html" class="view">view</a></td>
                                                 </tr>
                                                 <tr>
                                                     <td>2</td>
                                                     <td>May 10, 2018</td>
                                                     <td>Processing</td>
-                                                    <td>$17.00 for 1 item </td>
+                                                    <td>$17.00 for 1 item</td>
                                                     <td><a href="cart.html" class="view">view</a></td>
                                                 </tr>
                                             </tbody>
@@ -111,7 +111,7 @@
                                 <div class="tab-pane" id="address">
                                     <p>The following address will be used on the checkout page by default.</p>
                                     <h4 class="billing-address">Billing address</h4>
-                                    <a href="#" class="view">Edit</a>
+                                    <a href="#" class="view" data-toggle="modal" data-target="#editBillingAddressModal">Edit</a>
                                     <p><strong>@Model.FirstName @Model.LastName</strong></p>
                                     <address>
                                         @Model.CompanyName<br>
@@ -123,7 +123,7 @@
                                     <p>@Model.Country</p>
                                 </div>
                                 <div class="tab-pane fade" id="account-details">
-                                    <h3>Account details </h3>
+                                    <h3>Account details</h3>
                                     <div class="login">
                                         <div class="login_form_container">
                                             <div class="account_login_form">
@@ -143,9 +143,7 @@
                                                     <input type="password" name="user-password">
                                                     <label>Birthdate</label>
                                                     <input type="text" placeholder="MM/DD/YYYY" value="" name="birthday">
-                                                    <span class="example">
-                                                        (E.g.: 05/31/1970)
-                                                    </span>
+                                                    <span class="example">(E.g.: 05/31/1970)</span>
                                                     <br>
                                                     <span class="custom_checkbox">
                                                         <input type="checkbox" value="1" name="optin">
@@ -164,12 +162,71 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Modal for editing billing address -->
+                                <div class="modal fade" id="editBillingAddressModal" tabindex="-1" role="dialog" aria-labelledby="editBillingAddressModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editBillingAddressModalLabel">Edit Billing Address</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="editBillingAddressForm" method="post" action="@Url.Action("UpdateBillingAddress", "Home")">
+                                                    <input type="hidden" name="Id" value="@Model.Id" />
+                                                    <div class="form-group">
+                                                        <label for="FirstName">First Name</label>
+                                                        <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.FirstName">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="LastName">Last Name</label>
+                                                        <input type="text" class="form-control" id="LastName" name="LastName" value="@Model.LastName">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="CompanyName">Company Name</label>
+                                                        <input type="text" class="form-control" id="CompanyName" name="CompanyName" value="@Model.CompanyName">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="Streetaddress">Street Address</label>
+                                                        <input type="text" class="form-control" id="Streetaddress" name="Streetaddress" value="@Model.Streetaddress">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="City">City</label>
+                                                        <input type="text" class="form-control" id="City" name="City" value="@Model.City">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="County">County</label>
+                                                        <input type="text" class="form-control" id="County" name="County" value="@Model.County">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="Phone">Phone</label>
+                                                        <input type="text" class="form-control" id="Phone" name="Phone" value="@Model.Phone">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="Email">Email</label>
+                                                        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="Country">Country</label>
+                                                        <input type="text" class="form-control" id="Country" name="Country" value="@Model.Country">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary" form="editBillingAddressForm">Save changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Modal -->
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-            <!-- End Maincontent  -->
+            <!-- End Maincontent -->
         </div>
         <!--pos page inner end-->
     </div>

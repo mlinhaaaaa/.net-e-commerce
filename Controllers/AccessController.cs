@@ -2,17 +2,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using e_commmerce.Entities;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace e_commmerce.Controllers
 {
     public class AccessController : Controller
     {
         private readonly ShopContext db;
+        private readonly ILogger<AccessController> logger;
 
-        public AccessController(ShopContext context)
+        public AccessController(ShopContext context, ILogger<AccessController> logger)
         {
             db = context;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -31,22 +33,33 @@ namespace e_commmerce.Controllers
         [HttpPost]
         public IActionResult Login(Account account)
         {
-            if (HttpContext.Session.GetString("User") == null)
+            try
             {
-                var userAccount = db.Accounts
-                    .Where(x => x.User.Equals(account.User) && x.Pass.Equals(account.Pass))
-                    .FirstOrDefault();
-
-                if (userAccount != null)
+                if (HttpContext.Session.GetString("User") == null)
                 {
-                    HttpContext.Session.SetString("User", userAccount.User);
-                    HttpContext.Session.SetInt32("IsAdmin", userAccount.IsAdmin);
+                    var userAccount = db.Accounts
+                        .FirstOrDefault(x => x.User.Equals(account.User) && x.Pass.Equals(account.Pass));
 
-                    return RedirectToAction("Index", "Home");
+                    if (userAccount != null)
+                    {
+                        HttpContext.Session.SetString("User", userAccount.User);
+                        HttpContext.Session.SetInt32("IsAdmin", userAccount.IsAdmin);
+                        HttpContext.Session.SetInt32("UserUid", userAccount.Uid);
+
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error occurred during login");
+
+                return RedirectToAction("Error", "Home");
+            }
+
             return View();
         }
+
 
         [HttpGet]
         public IActionResult Register()
@@ -70,6 +83,7 @@ namespace e_commmerce.Controllers
 
                     HttpContext.Session.SetString("User", account.User);
                     HttpContext.Session.SetInt32("IsAdmin", account.IsAdmin);
+                    HttpContext.Session.SetInt32("UserUid", account.Uid);
 
                     return RedirectToAction("Index", "Home");
                 }
