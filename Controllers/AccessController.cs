@@ -20,7 +20,7 @@ namespace e_commmerce.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            if (HttpContext.Session.GetString("User") == null)
+            if (HttpContext.Session.GetString("UserUid") == null)
             {
                 return View();
             }
@@ -35,18 +35,21 @@ namespace e_commmerce.Controllers
         {
             try
             {
-                if (HttpContext.Session.GetString("User") == null)
+                if (HttpContext.Session.GetString("UserUid") == null)
                 {
                     var userAccount = db.Accounts
-                        .FirstOrDefault(x => x.User.Equals(account.User) && x.Pass.Equals(account.Pass));
+                        .FirstOrDefault(x => x.Email.Equals(account.Email) && x.Pass.Equals(account.Pass));
 
                     if (userAccount != null)
                     {
-                        HttpContext.Session.SetString("User", userAccount.User);
                         HttpContext.Session.SetInt32("IsAdmin", userAccount.IsAdmin);
                         HttpContext.Session.SetInt32("UserUid", userAccount.Uid);
 
                         return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Invalid login attempt.");
                     }
                 }
             }
@@ -57,9 +60,8 @@ namespace e_commmerce.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
-            return View();
+            return View(account);
         }
-
 
         [HttpGet]
         public IActionResult Register()
@@ -73,27 +75,27 @@ namespace e_commmerce.Controllers
             if (ModelState.IsValid)
             {
                 var existingUser = db.Accounts
-                    .Where(x => x.User.Equals(account.User))
-                    .FirstOrDefault();
+                    .FirstOrDefault(x => x.Email.Equals(account.Email));
 
                 if (existingUser == null)
                 {
                     db.Accounts.Add(account);
                     db.SaveChanges();
 
-                    HttpContext.Session.SetString("User", account.User);
                     HttpContext.Session.SetInt32("IsAdmin", account.IsAdmin);
-                    HttpContext.Session.SetInt32("UserUid", account.Uid);
 
-                    return RedirectToAction("Index", "Home");
+                    TempData["SuccessMessage"] = "Registration successful! Please log in.";
+
+                    return RedirectToAction("Login", "Access");
                 }
                 else
                 {
-                    ModelState.AddModelError("User", "Username already exists");
+                    TempData["ErrorMessage"] = "Registration failed. Email already exists.";
                 }
             }
             return View(account);
         }
+
 
         public IActionResult Logout()
         {
