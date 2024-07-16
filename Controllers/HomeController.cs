@@ -73,27 +73,69 @@ namespace e_commmerce.Controllers
 
             if (userUid == null)
             {
-                // Log the fact that the session was null
-                Console.WriteLine("UserUid session is null");
                 return RedirectToAction("Login", "Access");
             }
 
             var account = _context.Accounts.FirstOrDefault(a => a.Uid == userUid);
             if (account == null)
             {
-                Console.WriteLine($"No account found with Uid: {userUid}");
                 return RedirectToAction("Login", "Access");
             }
 
             var billingAddress = _context.BillingAddresses.FirstOrDefault(b => b.AccountUid == account.Uid);
             if (billingAddress == null)
             {
-                Console.WriteLine($"No billing address found for AccountUid: {account.Uid}");
-                return RedirectToAction("Login", "Access");
+                billingAddress = new BillingAddress();
             }
 
-            return View(billingAddress);
+            var viewModel = new AccountViewModel
+            {
+                Account = account,
+                BillingAddress = billingAddress
+            };
+
+            return View(viewModel);
         }
+
+
+        public IActionResult CreateBillingAddress(BillingAddress model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Account"); // Redirect back to account page if validation fails
+            }
+
+            try
+            {
+                // Assuming you have AccountUid already stored in session or retrieved somehow
+                var userUid = HttpContext.Session.GetInt32("UserUid");
+
+                if (userUid == null)
+                {
+                    return RedirectToAction("Login", "Access");
+                }
+
+                var account = _context.Accounts.FirstOrDefault(a => a.Uid == userUid);
+                if (account == null)
+                {
+                    return RedirectToAction("Login", "Access");
+                }
+
+                model.AccountUid = account.Uid;
+
+                _context.BillingAddresses.Add(model);
+                _context.SaveChanges();
+
+
+                return RedirectToAction("Account");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Unable to save changes. " + ex.Message);
+                return RedirectToAction("Account");
+            }
+        }
+
 
         [HttpPost]
         public IActionResult UpdateBillingAddress(BillingAddress model)
@@ -103,15 +145,12 @@ namespace e_commmerce.Controllers
                 var existingAddress = _context.BillingAddresses.Find(model.Id);
                 if (existingAddress != null)
                 {
-                    existingAddress.FirstName = model.FirstName;
-                    existingAddress.LastName = model.LastName;
                     existingAddress.CompanyName = model.CompanyName;
                     existingAddress.Country = model.Country;
                     existingAddress.Streetaddress = model.Streetaddress;
                     existingAddress.City = model.City;
                     existingAddress.County = model.County;
                     existingAddress.Phone = model.Phone;
-                    existingAddress.Email = model.Email;
 
                     _context.SaveChanges();
                 }

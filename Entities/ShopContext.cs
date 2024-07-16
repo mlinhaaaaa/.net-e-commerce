@@ -43,16 +43,11 @@ public partial class ShopContext : DbContext
         {
             entity.ToTable("BillingAddress");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.City).HasMaxLength(250);
             entity.Property(e => e.CompanyName).HasMaxLength(250);
             entity.Property(e => e.Country).HasMaxLength(250);
             entity.Property(e => e.County).HasMaxLength(250);
-            entity.Property(e => e.Email).HasMaxLength(250);
-            entity.Property(e => e.FirstName).HasMaxLength(250);
-            entity.Property(e => e.LastName).HasMaxLength(250);
             entity.Property(e => e.Phone).HasMaxLength(250);
             entity.Property(e => e.Streetaddress).HasMaxLength(250);
 

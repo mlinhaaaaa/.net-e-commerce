@@ -1,16 +1,16 @@
-﻿@model e_commmerce.Entities.BillingAddress
+﻿@model e_commmerce.Entities.AccountViewModel
 
 @{
     ViewData["Title"] = "Account";
     Layout = "_Layout";
 }
 
-<!--pos page start-->
+<!-- pos page start -->
 <div class="pos_page">
     <div class="container">
-        <!--pos page inner-->
+        <!-- pos page inner -->
         <div class="pos_page_inner">
-            <!--breadcrumbs area start-->
+            <!-- breadcrumbs area start -->
             <div class="breadcrumbs_area">
                 <div class="row">
                     <div class="col-12">
@@ -24,8 +24,8 @@
                     </div>
                 </div>
             </div>
-            <!--breadcrumbs area end-->
-            <!-- Start Maincontent  -->
+            <!-- breadcrumbs area end -->
+            <!-- Start Maincontent -->
             <section class="main_content_area">
                 <div class="account_dashboard">
                     <div class="row">
@@ -34,7 +34,7 @@
                             <div class="dashboard_tab_button">
                                 <ul role="tablist" class="nav flex-column dashboard-list">
                                     <li><a href="#dashboard" data-toggle="tab" class="nav-link active">Dashboard</a></li>
-                                    <li> <a href="#orders" data-toggle="tab" class="nav-link">Orders</a></li>
+                                    <li><a href="#orders" data-toggle="tab" class="nav-link">Orders</a></li>
                                     <li><a href="#address" data-toggle="tab" class="nav-link">Addresses</a></li>
                                     <li><a href="#account-details" data-toggle="tab" class="nav-link">Account details</a></li>
                                 </ul>
@@ -45,7 +45,7 @@
                             <div class="tab-content dashboard_content">
                                 <div class="tab-pane fade show active" id="dashboard">
                                     <h3>Dashboard</h3>
-                                    <p>From your account dashboard. you can easily check & view your <a href="#">recent orders</a>, manage your <a href="#">shipping and billing addresses</a> and <a href="#">Edit your password and account details.</a></p>
+                                    <p>From your account dashboard, you can easily check & view your <a href="#">recent orders</a>, manage your <a href="#">shipping and billing addresses</a>, and <a href="#">edit your password and account details.</a></p>
                                 </div>
                                 <div class="tab-pane fade" id="orders">
                                     <h3>Orders</h3>
@@ -79,49 +79,56 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="downloads">
-                                    <h3>Downloads</h3>
-                                    <div class="coron_table table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Product</th>
-                                                    <th>Downloads</th>
-                                                    <th>Expires</th>
-                                                    <th>Download</th>
-                                                </tr>
-                                            </thead>
+                                <div class="tab-pane" id="address">
+                                    <p>The following address will be used on the checkout page by default.</p>
+                                    @if (Model.BillingAddress != null)
+                                    {
+                                        <table class="table table-bordered">
                                             <tbody>
                                                 <tr>
-                                                    <td>Shopnovilla - Free Real Estate PSD Template</td>
-                                                    <td>May 10, 2018</td>
-                                                    <td><span class="danger">Expired</span></td>
-                                                    <td><a href="#" class="view">Click Here To Download Your File</a></td>
+                                                    <th>Full Name</th>
+                                                    <td>@Model.Account.FirstName @Model.Account.LastName</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Organic - ecommerce html template</td>
-                                                    <td>Sep 11, 2018</td>
-                                                    <td>Never</td>
-                                                    <td><a href="#" class="view">Click Here To Download Your File</a></td>
+                                                    <th>Company Name</th>
+                                                    <td>@Model.BillingAddress.CompanyName</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Street Address</th>
+                                                    <td>@Model.BillingAddress.Streetaddress</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Town / City</th>
+                                                    <td>@Model.BillingAddress.City</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>State / County</th>
+                                                    <td>@Model.BillingAddress.County</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Phone</th>
+                                                    <td>@Model.BillingAddress.Phone</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Email</th>
+                                                    <td>@Model.Account.Email</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Country</th>
+                                                    <td>@Model.BillingAddress.Country</td>
                                                 </tr>
                                             </tbody>
                                         </table>
-                                    </div>
+                                        <a href="#" class="view" data-toggle="modal" data-target="#editBillingAddressModal">Edit</a>
+                                    }
+                                    else
+                                    {
+                                        <p>No billing address found.</p>
+                                        <a href="#" class="view" data-toggle="modal" data-target="#createBillingAddressModal">Create</a>
+                                    }
                                 </div>
-                                <div class="tab-pane" id="address">
-                                    <p>The following address will be used on the checkout page by default.</p>
-                                    <h4 class="billing-address">Billing address</h4>
-                                    <a href="#" class="view" data-toggle="modal" data-target="#editBillingAddressModal">Edit</a>
-                                    <p><strong>@Model.FirstName @Model.LastName</strong></p>
-                                    <address>
-                                        @Model.CompanyName<br>
-                                        @Model.Streetaddress<br>
-                                        @Model.City, @Model.County<br>
-                                        @Model.Phone<br>
-                                        @Model.Email
-                                    </address>
-                                    <p>@Model.Country</p>
-                                </div>
+
+
                                 <div class="tab-pane fade" id="account-details">
                                     <h3>Account details</h3>
                                     <div class="login">
@@ -167,55 +174,114 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="editBillingAddressModalLabel">Edit Billing Address</h5>
+                                                <h5 class="modal-title" id="editBillingAddressModalLabel">Billing Address</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
                                             <div class="modal-body">
                                                 <form id="editBillingAddressForm" method="post" action="@Url.Action("UpdateBillingAddress", "Home")">
-                                                    <input type="hidden" name="Id" value="@Model.Id" />
+                                                    <input type="hidden" name="Id" value="@Model.BillingAddress.Id" />
                                                     <div class="form-group">
                                                         <label for="FirstName">First Name</label>
-                                                        <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.FirstName">
+                                                        <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.Account.FirstName">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="LastName">Last Name</label>
-                                                        <input type="text" class="form-control" id="LastName" name="LastName" value="@Model.LastName">
+                                                        <input type="text" class="form-control" id="LastName" name="LastName" value="@Model.Account.LastName">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="CompanyName">Company Name</label>
-                                                        <input type="text" class="form-control" id="CompanyName" name="CompanyName" value="@Model.CompanyName">
+                                                        <input type="text" class="form-control" id="CompanyName" name="CompanyName" value="@Model.BillingAddress.CompanyName">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="Streetaddress">Street Address</label>
-                                                        <input type="text" class="form-control" id="Streetaddress" name="Streetaddress" value="@Model.Streetaddress">
+                                                        <input type="text" class="form-control" id="Streetaddress" name="Streetaddress" value="@Model.BillingAddress.Streetaddress">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="City">City</label>
-                                                        <input type="text" class="form-control" id="City" name="City" value="@Model.City">
+                                                        <input type="text" class="form-control" id="City" name="City" value="@Model.BillingAddress.City">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="County">County</label>
-                                                        <input type="text" class="form-control" id="County" name="County" value="@Model.County">
+                                                        <input type="text" class="form-control" id="County" name="County" value="@Model.BillingAddress.County">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="Phone">Phone</label>
-                                                        <input type="text" class="form-control" id="Phone" name="Phone" value="@Model.Phone">
+                                                        <input type="text" class="form-control" id="Phone" name="Phone" value="@Model.BillingAddress.Phone">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="Email">Email</label>
-                                                        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email">
+                                                        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Account.Email">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="Country">Country</label>
-                                                        <input type="text" class="form-control" id="Country" name="Country" value="@Model.Country">
+                                                        <input type="text" class="form-control" id="Country" name="Country" value="@Model.BillingAddress.Country">
                                                     </div>
                                                 </form>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary" form="editBillingAddressForm">Save changes</button>
+                                                <button type="submit" class="btn btn-primary" form="editBillingAddressForm">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Modal -->
+                                <!-- Modal for creating billing address -->
+                                <div class="modal fade" id="createBillingAddressModal" tabindex="-1" role="dialog" aria-labelledby="createBillingAddressModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="createBillingAddressModalLabel">Billing Address</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="createBillingAddressForm" method="post" action="@Url.Action("CreateBillingAddress", "Home")">
+                                                    <input type="hidden" name="Id" value="@Model.BillingAddress.Id" />
+                                                    <div class="form-group">
+                                                        <label for="FirstName">First Name</label>
+                                                        <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.Account.FirstName">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="LastName">Last Name</label>
+                                                        <input type="text" class="form-control" id="LastName" name="LastName" value="@Model.Account.LastName">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="CompanyName">Company Name</label>
+                                                        <input type="text" class="form-control" id="CompanyName" name="CompanyName" value="@Model.BillingAddress.CompanyName">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="Streetaddress">Street Address</label>
+                                                        <input type="text" class="form-control" id="Streetaddress" name="Streetaddress" value="@Model.BillingAddress.Streetaddress">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="City">City</label>
+                                                        <input type="text" class="form-control" id="City" name="City" value="@Model.BillingAddress.City">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="County">County</label>
+                                                        <input type="text" class="form-control" id="County" name="County" value="@Model.BillingAddress.County">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="Phone">Phone</label>
+                                                        <input type="text" class="form-control" id="Phone" name="Phone" value="@Model.BillingAddress.Phone">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="Email">Email</label>
+                                                        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Account.Email">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="Country">Country</label>
+                                                        <input type="text" class="form-control" id="Country" name="Country" value="@Model.BillingAddress.Country">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary" form="createBillingAddressForm">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -228,7 +294,7 @@
             </section>
             <!-- End Maincontent -->
         </div>
-        <!--pos page inner end-->
+        <!-- pos page inner end -->
     </div>
 </div>
-<!--pos page end-->
+<!-- pos page end -->
