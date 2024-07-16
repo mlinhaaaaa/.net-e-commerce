@@ -21,8 +21,15 @@ namespace e_commmerce.Controllers
             _context = context;
         }
 
+        private void SetViewBagSessionValues()
+        {
+            ViewBag.UserUid = HttpContext.Session.GetString("UserUid");
+            ViewBag.IsAdmin = HttpContext.Session.GetInt32("IsAdmin") == 1;
+        }
+
         public IActionResult Index()
         {
+            SetViewBagSessionValues();
             var products = _context.Products.Include(p => p.Cate).ToList();
             var Newproducts = _context.Products.OrderByDescending(p => p.Id).Take(6).Include(p => p.Cate).ToList();
             ViewData["Newproducts"] = Newproducts;
@@ -34,6 +41,7 @@ namespace e_commmerce.Controllers
         [Route("danh-muc/{name}")]
         public async Task<IActionResult> Category(string name)
         {
+            SetViewBagSessionValues();
             if (string.IsNullOrEmpty(name))
             {
                 return NotFound();
@@ -64,11 +72,13 @@ namespace e_commmerce.Controllers
         [AdminAuthentication]
         public IActionResult Dashboard()
         {
+            SetViewBagSessionValues();
             return View();
         }
 
         public IActionResult Account()
         {
+            SetViewBagSessionValues();
             var userUid = HttpContext.Session.GetInt32("UserUid");
 
             if (userUid == null)
@@ -97,17 +107,16 @@ namespace e_commmerce.Controllers
             return View(viewModel);
         }
 
-
         public IActionResult CreateBillingAddress(BillingAddress model)
         {
+            SetViewBagSessionValues();
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Account"); // Redirect back to account page if validation fails
+                return RedirectToAction("Account");
             }
 
             try
             {
-                // Assuming you have AccountUid already stored in session or retrieved somehow
                 var userUid = HttpContext.Session.GetInt32("UserUid");
 
                 if (userUid == null)
@@ -126,7 +135,6 @@ namespace e_commmerce.Controllers
                 _context.BillingAddresses.Add(model);
                 _context.SaveChanges();
 
-
                 return RedirectToAction("Account");
             }
             catch (Exception ex)
@@ -136,10 +144,10 @@ namespace e_commmerce.Controllers
             }
         }
 
-
         [HttpPost]
         public IActionResult UpdateBillingAddress(BillingAddress model)
         {
+            SetViewBagSessionValues();
             if (ModelState.IsValid)
             {
                 var existingAddress = _context.BillingAddresses.Find(model.Id);
@@ -162,6 +170,7 @@ namespace e_commmerce.Controllers
         [HttpPost]
         public IActionResult UpdateAccountDetails(Account model)
         {
+            SetViewBagSessionValues();
             var userUid = HttpContext.Session.GetInt32("UserUid");
             if (userUid == null)
             {
@@ -186,11 +195,11 @@ namespace e_commmerce.Controllers
             return RedirectToAction("Account", "Home");
         }
 
-
         public async Task<IActionResult> Search(string searchString)
         {
+            SetViewBagSessionValues();
             var Products = from n in _context.Products
-                       select n;
+                           select n;
             if (!string.IsNullOrEmpty(searchString))
             {
                 Products = Products.Where(s => s.Name.Contains(searchString));
