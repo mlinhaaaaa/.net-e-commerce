@@ -1,20 +1,24 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using e_commmerce.Entities;
 using Microsoft.Extensions.Logging;
+using e_commmerce.Entities;
+using System.Threading.Tasks;
+using e_commmerce.Entities.EmailService;
 
 namespace e_commmerce.Controllers
 {
     public class AccessController : Controller
     {
-        private readonly ShopContext db;
-        private readonly ILogger<AccessController> logger;
+        private readonly ShopContext _db;
+        private readonly ILogger<AccessController> _logger;
+        private readonly IEmailService _emailService;
 
-        public AccessController(ShopContext context, ILogger<AccessController> logger)
+        public AccessController(ShopContext context, ILogger<AccessController> logger, IEmailService emailService)
         {
-            db = context;
-            this.logger = logger;
+            _db = context;
+            _logger = logger;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -37,8 +41,7 @@ namespace e_commmerce.Controllers
             {
                 if (HttpContext.Session.GetString("UserUid") == null)
                 {
-                    var userAccount = db.Accounts
-                        .FirstOrDefault(x => x.Email.Equals(account.Email) && x.Pass.Equals(account.Pass));
+                    var userAccount = _db.Accounts.FirstOrDefault(x => x.Email.Equals(account.Email) && x.Pass.Equals(account.Pass));
 
                     if (userAccount != null)
                     {
@@ -55,8 +58,7 @@ namespace e_commmerce.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Error occurred during login");
-
+                _logger.LogError(ex, "Error occurred during login");
                 return RedirectToAction("Error", "Home");
             }
 
@@ -74,16 +76,14 @@ namespace e_commmerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existingUser = db.Accounts
-                    .FirstOrDefault(x => x.Email.Equals(account.Email));
+                var existingUser = _db.Accounts.FirstOrDefault(x => x.Email.Equals(account.Email));
 
                 if (existingUser == null)
                 {
-                    db.Accounts.Add(account);
-                    db.SaveChanges();
+                    _db.Accounts.Add(account);
+                    _db.SaveChanges();
 
                     HttpContext.Session.SetInt32("IsAdmin", account.IsAdmin);
-
                     TempData["SuccessMessage"] = "Registration successful! Please log in.";
 
                     return RedirectToAction("Login", "Access");
@@ -96,6 +96,48 @@ namespace e_commmerce.Controllers
             return View(account);
         }
 
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            var userAccount = _db.Accounts.FirstOrDefault(x => x.Email.Equals(email));
+
+            if (userAccount != null)
+            {
+                try
+                {
+                    string newPassword = GenerateRandomPassword();
+                    userAccount.Pass = newPassword;
+                    userAccount.ConfirmPassword = newPassword;
+                    _db.SaveChanges();
+
+                    await _emailService.SendEmailAsync(userAccount.Email, "Password Reset", $"Your new password is: {newPassword}");
+
+                    TempData["SuccessMessage"] = "A new password has been sent to your email.";
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error occurred while processing forgot password request.");
+                    TempData["ErrorMessage"] = "An error occurred. Please try again later.";
+                }
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Email not found. Please enter a valid email address.";
+            }
+
+            return RedirectToAction("ForgotPassword");
+        }
+
+        private string GenerateRandomPassword()
+        {
+            return "newPassword123";
+        }
 
         public IActionResult Logout()
         {

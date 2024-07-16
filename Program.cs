@@ -1,6 +1,8 @@
 using e_commmerce.Entities;
+using e_commmerce.Entities.EmailService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +14,10 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration); 
+builder.Services.AddTransient<IEmailService, EmailService>();
 
-IServiceCollection serviceCollection = builder.Services.AddDbContext<ShopContext>(options =>
+builder.Services.AddDbContext<ShopContext>(options =>
        options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
 var app = builder.Build();
 // Configure the HTTP request pipeline.
