@@ -83,6 +83,7 @@
                                     <p>The following address will be used on the checkout page by default.</p>
                                     @if (Model.BillingAddress != null)
                                     {
+                                        <h4 class="billing-address">Billing address</h4>
                                         <table class="table table-bordered">
                                             <tbody>
                                                 <tr>
@@ -119,7 +120,6 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <a href="#" class="view" data-toggle="modal" data-target="#editBillingAddressModal">Edit</a>
                                     }
                                     else
                                     {
@@ -129,46 +129,53 @@
                                 </div>
 
 
+                                <!-- Dashboard Tab: Account Details -->
                                 <div class="tab-pane fade" id="account-details">
-                                    <h3>Account details</h3>
-                                    <div class="login">
-                                        <div class="login_form_container">
-                                            <div class="account_login_form">
-                                                <form action="#">
-                                                    <p>Already have an account? <a href="#">Log in instead!</a></p>
-                                                    <div class="input-radio">
-                                                        <span class="custom-radio"><input type="radio" value="1" name="id_gender"> Mr.</span>
-                                                        <span class="custom-radio"><input type="radio" value="1" name="id_gender"> Mrs.</span>
-                                                    </div> <br>
-                                                    <label>First Name</label>
-                                                    <input type="text" name="first-name">
-                                                    <label>Last Name</label>
-                                                    <input type="text" name="last-name">
-                                                    <label>Email</label>
-                                                    <input type="text" name="email-name">
-                                                    <label>Password</label>
-                                                    <input type="password" name="user-password">
-                                                    <label>Birthdate</label>
-                                                    <input type="text" placeholder="MM/DD/YYYY" value="" name="birthday">
-                                                    <span class="example">(E.g.: 05/31/1970)</span>
-                                                    <br>
-                                                    <span class="custom_checkbox">
-                                                        <input type="checkbox" value="1" name="optin">
-                                                        <label>Receive offers from our partners</label>
-                                                    </span>
-                                                    <br>
-                                                    <span class="custom_checkbox">
-                                                        <input type="checkbox" value="1" name="newsletter">
-                                                        <label>Sign up for our newsletter<br><em>You may unsubscribe at any moment. For that purpose, please find our contact info in the legal notice.</em></label>
-                                                    </span>
-                                                    <div class="save_button primary_btn default_button">
-                                                        <a href="#">Save</a>
-                                                    </div>
-                                                </form>
+                                    <h3>Account Details</h3>
+                                    <form asp-action="UpdateAccountDetails" method="post">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="FirstName">First Name</label>
+                                                    <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.Account.FirstName" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="LastName">Last Name</label>
+                                                    <input type="text" class="form-control" id="LastName" name="LastName" value="@Model.Account.LastName" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Email">Email</label>
+                                                    <input type="email" class="form-control" id="Email" name="Email" value="@Model.Account.Email" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Birthdate">Birthdate</label>
+                                                    <input type="date" class="form-control" id="Birthdate" name="Birthdate"
+                                                           value="@(Model.Account.Birthdate.HasValue ? Model.Account.Birthdate.Value.ToString("yyyy-MM-dd") : string.Empty)"
+                                                           required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Gender">Gender</label>
+                                                    <select class="form-control" id="Gender" name="Gender">
+                                                        <option value="Male" selected>Male</option>
+                                                        <option value="Female">Female</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <button type="submit" class="btn btn-primary">Update Details</button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
+                                <!-- End Dashboard Tab: Account Details -->
                                 <!-- Modal for editing billing address -->
                                 <div class="modal fade" id="editBillingAddressModal" tabindex="-1" role="dialog" aria-labelledby="editBillingAddressModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">

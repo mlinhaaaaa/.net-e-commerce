@@ -178,8 +178,8 @@ namespace e_commmerce.Controllers
             account.FirstName = model.FirstName;
             account.LastName = model.LastName;
             account.Email = model.Email;
-            account.Pass = model.Pass;
             account.Birthdate = model.Birthdate;
+            account.Gender = model.Gender;
 
             _context.SaveChanges();
 
