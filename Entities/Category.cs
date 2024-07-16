@@ -5,7 +5,7 @@ namespace e_commmerce.Entities;
 
 public partial class Category
 {
-    public int Cid { get; set; }
+    public int CateId { get; set; }
 
     public string Name { get; set; } = null!;
 

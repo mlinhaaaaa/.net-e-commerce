@@ -56,18 +56,18 @@
                         @Html.DisplayFor(modelItem => item.IsAdmin)
                     </td>
                     <td>
-                        <a asp-action="Delete" asp-route-id="@item.Uid" class="text-danger" onclick="return confirm('Are you sure you want to delete this item?');">
+                        <a asp-action="Delete" asp-route-id="@item.UserId" class="text-danger" onclick="return confirm('Are you sure you want to delete this item?');">
                             <i class="fas fa-trash-alt"></i>
                         </a> |
                         @if (item.IsAdmin == 0)
                         {
-                            <a asp-action="GrantAdmin" asp-route-id="@item.Uid">
+                            <a asp-action="GrantAdmin" asp-route-id="@item.UserId">
                                 <i class="fas fa-user-shield"></i>
                             </a>
                         }
                         else
                         {
-                            <a asp-action="RevokeAdmin" asp-route-id="@item.Uid">
+                            <a asp-action="RevokeAdmin" asp-route-id="@item.UserId">
                                 <i class="fas fa-user-times"></i>
                             </a>
                         }

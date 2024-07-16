@@ -1,0 +1,97 @@
+﻿@using e_commmerce.Entities
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="pos_page">
+    <div class="container">
+        <div class="pos_page_inner">
+            <div class="breadcrumbs_area">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadcrumb_content">
+                            <ul>
+                                <li><a href="index.html">home</a></li>
+                                <li><i class="fa fa-angle-right"></i></li>
+                                <li>Shopping Cart</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shopping Cart Area -->
+            <div class="shopping_cart_area">
+                <form asp-action="UpdateCartItem" method="post">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table_desc">
+                                <div class="cart_page table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="product_remove">Delete</th>
+                                                <th class="product_thumb">Image</th>
+                                                <th class="product_name">Product</th>
+                                                <th class="product-price">Price</th>
+                                                <th class="product_quantity">Quantity</th>
+                                                <th class="product_total">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @* @foreach (var item in ViewData["CartItems"] as List<CartItem>)
+                                            {
+                                                <tr>
+                                                    
+                                                    <td class="product_thumb">
+                                                <img src="@item.Product.ImgUrl" alt="@item.Product.Name" width="80" height="80">
+                                                    </td>
+                                                    <td class="product_name">@item.Product.Name</td>
+                                                    <td class="product-price">@item.Product.Price.ToString("C")</td>
+                                                    <td class="product_quantity">
+                                                        <input type="number" name="quantity" value="@item.Quantity" min="1">
+                                                        <input type="hidden" name="cartItemId" value="@item.ItemId">
+                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                    </td>
+                                                    <td class="product_total">@((item.Quantity * item.Product.Price).ToString("C"))</td>
+                                                    <td class="product_remove">
+                                                        <form asp-action="RemoveCartItem" asp-route-cartItemId="@item.ItemId">
+                                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            } *@
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="cart_submit">
+                                    <button type="submit" class="btn btn-primary">Update Cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Cart Totals -->
+                <div class="cart_totals">
+                    <h2>Cart Totals</h2>
+                    <table class="table">
+                        <tr>
+                            <td>Subtotal</td>
+                            <td>@(((decimal)ViewData["Subtotal"]).ToString("C"))</td>
+                        </tr>
+                        <!-- Add shipping cost or other totals as needed -->
+                    </table>
+                    <div class="checkout_btn">
+                        <a asp-controller="Cart" asp-action="Checkout" class="btn btn-success">Proceed to Checkout</a>
+                    </div>
+                </div>
+                <!-- End Cart Totals -->
+
+            </div>
+            <!-- End Shopping Cart Area -->
+
+        </div>
+    </div>
+</div>

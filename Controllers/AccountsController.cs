@@ -34,7 +34,7 @@ namespace e_commmerce.Controllers
             }
 
             var account = await _context.Accounts
-                .FirstOrDefaultAsync(m => m.Uid == id);
+                .FirstOrDefaultAsync(m => m.UserId == id);
             if (account == null)
             {
                 return NotFound();
@@ -80,7 +80,7 @@ namespace e_commmerce.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AccountExists(account.Uid))
+                if (!AccountExists(account.UserId))
                 {
                     return NotFound();
                 }
@@ -114,7 +114,35 @@ namespace e_commmerce.Controllers
 
         private bool AccountExists(int id)
         {
-            return _context.Accounts.Any(e => e.Uid == id);
+            return _context.Accounts.Any(e => e.UserId == id);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Login(string username, string password)
+        {
+            // Validate username and password (this part may vary based on your authentication logic)
+
+            var user = await _context.Accounts.SingleOrDefaultAsync(a => a.User == username && a.Pass == password);
+
+            if (user != null)
+            {
+                // Create a new Cart for the logged-in user if one doesn't exist
+                var cart = new Cart
+                {
+                    UserId = user.UserId, // Assign the UserId from the logged-in user
+                   
+                };
+
+                _context.Carts.Add(cart);
+                await _context.SaveChangesAsync();
+
+                // Optionally, store CartId in session or return it to the client
+                HttpContext.Session.SetInt32("CartId", cart.CartId);
+
+                return RedirectToAction("Index", "Home"); // Redirect to home page or any other page
+            }
+
+            // Handle invalid login
+            return View("Login");
         }
     }
 }

@@ -37,7 +37,7 @@ namespace e_commmerce.Controllers
         [HttpGet]
         public IActionResult GetById(int id)
         {
-            var data = _context.Categories.FirstOrDefault(x => x.Cid == id);
+            var data = _context.Categories.FirstOrDefault(x => x.CateId == id);
             if (data == null)
             {
                 return BadRequest();
@@ -48,7 +48,7 @@ namespace e_commmerce.Controllers
         [HttpPost]
         public IActionResult Edit(int id, string name)
         {
-            var category = _context.Categories.FirstOrDefault(x => x.Cid == id);
+            var category = _context.Categories.FirstOrDefault(x => x.CateId == id);
             if (category == null)
             {
                 return BadRequest();
@@ -63,7 +63,7 @@ namespace e_commmerce.Controllers
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            var category = _context.Categories.FirstOrDefault(x => x.Cid == id);
+            var category = _context.Categories.FirstOrDefault(x => x.CateId == id);
             if (category == null)
             {
                 return BadRequest();

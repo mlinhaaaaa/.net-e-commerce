@@ -44,9 +44,10 @@
                         <div class="header_links">
                             <ul id="navbarLinks">
                                 <li><a href="contact.html" title="Contact">Contact</a></li>
-                                <li><a href="wishlist.html" title="wishlist">My wishlist</a></li>
+                                <li><a asp-controller="Cart" asp-action="Wishlist">My wishlist</a></li>
                                 <li><a href="my-account.html" title="My account">My account</a></li>
-                                <li><a href="cart.html" title="My cart">My cart</a></li>
+                               
+                                <li><a asp-controller="Cart" asp-action="Cart">My cart</a></li>
                                 <li><a asp-controller="Home" asp-action="Dashboard">Dashboard</a></li>
                                 <li><a asp-controller="Access" asp-action="Login">Login</a></li>
                                 <li><a asp-controller="Access" asp-action="Logout">Logout</a></li>
@@ -116,7 +117,7 @@
                                         <span class="prices">  $227.00  </span>
                                     </div>
                                     <div class="cart_button">
-                                        <a href="checkout.html"> Check out</a>
+                                        <a asp-controller="Cart" asp-action="Checkout">Checkout</a>
                                     </div>
                                 </div>
                                 <!--mini cart end-->

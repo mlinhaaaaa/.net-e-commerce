@@ -43,7 +43,7 @@ namespace e_commmerce.Controllers
             }
 
             var products = await _context.Products
-                .Where(p => p.CateId == category.Cid)
+                .Where(p => p.CateId == category.CateId)
                 .Include(p => p.Cate)
                 .ToListAsync();
 
@@ -58,7 +58,7 @@ namespace e_commmerce.Controllers
         }
 
         [Route("bang-dieu-khien")]
-        [AdminAuthentication]
+        
         public IActionResult Dashboard()
         {
             return View();

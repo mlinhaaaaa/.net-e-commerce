@@ -28,12 +28,12 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Id</td>
+                <td>@item.ProdId</td>
                 <td>@item.Name</td>
                 <td>
-                    @if (!string.IsNullOrEmpty(item.ImagePath))
+                    @if (!string.IsNullOrEmpty(item.ImgUrl))
                     {
-                        <img src="@item.ImagePath" alt="@item.Name" style="width: 100px; height: auto;" />
+                        <img src="@item.ImgUrl" alt="@item.Name" style="width: 100px; height: auto;" />
                     }
                 </td>
                 <td>@item.Price VND</td>
@@ -41,8 +41,8 @@
                 <td>@item.Description</td>
                 <td>@item.Cate?.Name</td>
                 <td>
-                    <a data-bs-toggle="modal" data-bs-target="#editModal" class="btn btn-warning" onclick="editProduct('@item.Id', '@item.Name', '@item.Price', '@item.Size', '@item.Description', '@item.CateId')"><i class="fas fa-edit"></i></a>
-                    <a class="btn btn-danger" onclick="deleteProduct('@item.Id')"><i class="fas fa-trash-alt"></i></a>
+                    <a data-bs-toggle="modal" data-bs-target="#editModal" class="btn btn-warning" onclick="editProduct('@item.ProdId', '@item.Name', '@item.Price', '@item.Size', '@item.Description', '@item.CateId')"><i class="fas fa-edit"></i></a>
+                    <a class="btn btn-danger" onclick="deleteProduct('@item.ProdId')"><i class="fas fa-trash-alt"></i></a>
                 </td>
             </tr>
         }
@@ -90,7 +90,7 @@
                         <select id="categoryId" class="form-control">
                             @foreach (var category in categories)
                             {
-                                <option value="@category.Cid">@category.Name</option>
+                                <option value="@category.CateId">@category.Name</option>
                             }
                         </select>
                     </div>
@@ -147,7 +147,7 @@
                         <select id="categoryId_edit" class="form-control">
                             @foreach (var category in categories)
                             {
-                                <option value="@category.Cid">@category.Name</option>
+                                <option value="@category.CateId">@category.Name</option>
                             }
                         </select>
                     </div>

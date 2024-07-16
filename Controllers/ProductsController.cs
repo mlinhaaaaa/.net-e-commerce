@@ -47,7 +47,7 @@ namespace e_commmerce.Controllers
             Product product = new Product()
             {
                 Name = name,
-                ImagePath = imagePath,
+                ImgUrl = imagePath,
                 Price = price,
                 Size = size,
                 Description = description,
@@ -62,7 +62,7 @@ namespace e_commmerce.Controllers
         [HttpGet]
         public IActionResult GetById(int id)
         {
-            var data = _context.Products.FirstOrDefault(x => x.Id == id);
+            var data = _context.Products.FirstOrDefault(x => x.ProdId == id);
             if (data == null)
             {
                 return BadRequest();
@@ -73,13 +73,13 @@ namespace e_commmerce.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, string name, IFormFile imageFile, decimal price, string size, string description, int cateId)
         {
-            var product = _context.Products.FirstOrDefault(x => x.Id == id);
+            var product = _context.Products.FirstOrDefault(x => x.ProdId == id);
             if (product == null)
             {
                 return BadRequest();
             }
 
-            string imagePath = product.ImagePath;
+            string imagePath = product.ImgUrl;
             if (imageFile != null)
             {
                 string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
@@ -93,7 +93,7 @@ namespace e_commmerce.Controllers
             }
 
             product.Name = name;
-            product.ImagePath = imagePath;
+            product.ImgUrl = imagePath;
             product.Price = price;
             product.Size = size;
             product.Description = description;
@@ -106,7 +106,7 @@ namespace e_commmerce.Controllers
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            var product = _context.Products.FirstOrDefault(x => x.Id == id);
+            var product = _context.Products.FirstOrDefault(x => x.ProdId == id);
             if (product == null)
             {
                 return BadRequest();

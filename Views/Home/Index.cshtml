@@ -104,9 +104,6 @@
                             </div>
                         </div>
                         <!--sidebar banner end-->
-
-
-
                     </div>
                     <div class="col-lg-9 col-md-12">
                         <!--banner slider start-->
@@ -144,12 +141,12 @@
                                     <div class="col-lg-4 col-md-6">
                                         <div class="single_product">
                                             <div class="product_thumb">
-                                                <a href="single-product.html"><img style="width:100%;height: 350px;object-fit: cover;" src="@product.ImagePath" alt="@product.Name"></a>
+                                                <a href="single-product.html"><img style="width:100%;height: 350px;object-fit: cover;" src="@product.ImgUrl" alt="@product.Name"></a>
                                                 <div class="img_icone">
                                                     <img src="~/img/cart/span-new.png" alt="New">
                                                 </div>
                                                 <div class="product_action">
-                                                    <a href="single-product.html"> <i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                                    <button type="button" class="btn btn-link add-to-cart" data-prod-id="@product.ProdId"><i class="fa fa-shopping-cart"></i> Add to cart</button>
                                                 </div>
                                             </div>
                                             <div class="product_content">
@@ -158,7 +155,7 @@
                                             </div>
                                             <div class="product_info">
                                                 <ul>
-                                                    <li><a href="#" title=" Add to Wishlist ">Add to Wishlist</a></li>
+                                                    <li><a href="#" title="Add to Wishlist">Add to Wishlist</a></li>
                                                     <li><a href="#" data-toggle="modal" data-target="#modal_box" title="Quick view">View Detail</a></li>
                                                 </ul>
                                             </div>
@@ -266,6 +263,32 @@
 
             // Load categories when the page loads
             loadCategories();
+    </script>
+    <script>
+        $(document).ready(function () {
+            function addToCart(prodId) {
+                $.ajax({
+                    url: '@Url.Action("AddToCart", "Cart")',
+                    type: 'POST',
+                    data: { prodId: prodId },
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Product added to cart!");
+                        } else {
+                            alert("Error: " + response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error adding to cart:', error);
+                    }
+                });
+            }
+
+            $('.add-to-cart').click(function () {
+                var prodId = $(this).data('prod-id');
+                addToCart(prodId);
+            });
         });
     </script>
 }
+

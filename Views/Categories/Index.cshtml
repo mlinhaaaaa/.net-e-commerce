@@ -23,11 +23,11 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Cid</td>
+                <td>@item.CateId</td>
                 <td>@item.Name</td>
                 <td>
-                    <a data-bs-toggle="modal" data-bs-target="#editModal" class="btn btn-warning" onclick="editCategory('@item.Cid', '@item.Name')"><i class="fas fa-edit"></i></a>
-                    <a class="btn btn-danger" onclick="deleteCategory('@item.Cid')"><i class="fas fa-trash-alt"></i></a>
+                    <a data-bs-toggle="modal" data-bs-target="#editModal" class="btn btn-warning" onclick="editCategory('@item.CateId', '@item.Name')"><i class="fas fa-edit"></i></a>
+                    <a class="btn btn-danger" onclick="deleteCategory('@item.CateId')"><i class="fas fa-trash-alt"></i></a>
                 </td>
             </tr>
         }
