@@ -186,18 +186,13 @@
                         <p>Showing 1–9 of @Model.Count results</p>
                     </div>
                     <div class="select_option">
-                        <form action="#">
+                        <form id="sortForm">
                             <label>Sort By</label>
                             <select name="orderby" id="short">
-                                <option selected="" value="1">Position</option>
-                                <option value="1">Price: Lowest</option>
-                                <option value="1">Price: Highest</option>
-                                <option value="1">Product Name:Z</option>
-                                <option value="1">Sort by price:low</option>
-                                <option value="1">Product Name: Z</option>
-                                <option value="1">In stock</option>
-                                <option value="1">Product Name: A</option>
-                                <option value="1">In stock</option>
+                                <option value="position">Position</option>
+                                <option value="price-lowest">Price: Lowest</option>
+                                <option value="price-highest">Price: Highest</option>
+                                <option value="name-ascending">Product Name: A-Z</option>
                             </select>
                         </form>
                     </div>
@@ -270,7 +265,6 @@
                                                 </p>
                                                 <div class="content_price">
                                                     <span>$@product.Price</span>
-                                                    <span class="old-price">$130.00</span>
                                                 </div>
                                                 <div class="add_links">
                                                     <ul>
@@ -318,5 +312,13 @@
     <!--pos home section end-->
     <!--pos page inner end-->
 </div>
-</div>
 <!--pos page end-->
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#short').change(function () {
+                $('#sortForm').submit();
+            });
+        });
+    </script>
+}

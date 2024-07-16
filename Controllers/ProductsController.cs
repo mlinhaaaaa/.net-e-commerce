@@ -116,11 +116,30 @@ namespace e_commmerce.Controllers
             _context.SaveChanges();
             return Ok();
         }
-        public IActionResult ShopList()
+        [HttpGet]
+        public IActionResult ShopList(string orderby)
         {
-            var products = _context.Products.Include(p => p.Cate).ToList();
-            return View(products);
+            IQueryable<Product> products = _context.Products.Include(p => p.Cate);
+
+            switch (orderby)
+            {
+                case "price-lowest":
+                    products = products.OrderBy(p => p.Price);
+                    break;
+                case "price-highest":
+                    products = products.OrderByDescending(p => p.Price);
+                    break;
+                case "name-ascending":
+                    products = products.OrderBy(p => p.Name);
+                    break;
+                default:
+                    products = products.OrderBy(p => p.Id);
+                    break;
+            }
+
+            return View(products.ToList());
         }
+
 
     }
 }
