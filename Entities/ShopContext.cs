@@ -19,7 +19,7 @@ public partial class ShopContext : DbContext
 
     public virtual DbSet<Category> Categories { get; set; }
 
-    public virtual DbSet<New> News { get; set; }
+    public virtual DbSet<News> News { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
 
@@ -44,14 +44,12 @@ public partial class ShopContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(100);
         });
 
-        modelBuilder.Entity<New>(entity =>
+        modelBuilder.Entity<News>(entity =>
         {
             entity.HasKey(e => e.IdN);
 
-            entity.ToTable("New");
-
-            entity.Property(e => e.IdN).ValueGeneratedNever();
-            entity.Property(e => e.Description).HasMaxLength(200);
+            entity.Property(e => e.TimeCreate).HasColumnType("datetime");
+            entity.Property(e => e.Title).HasMaxLength(200);
         });
 
         modelBuilder.Entity<Product>(entity =>

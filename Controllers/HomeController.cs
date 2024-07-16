@@ -66,16 +66,11 @@ namespace e_commmerce.Controllers
             return View();
         }
 
-        public IActionResult Account()
-        {
-            var Address = _context.BillingAddresses.FirstOrDefault();
-            return View(Address);
-        }
 
         public async Task<IActionResult> Search(string searchString)
         {
             var Products = from n in _context.Products
-                       select n;
+                           select n;
             if (!string.IsNullOrEmpty(searchString))
             {
                 Products = Products.Where(s => s.Name.Contains(searchString));
