@@ -21,7 +21,7 @@ public partial class Account
 
     public string? Gender { get; set; }
 
-    public DateTime? Birthdate { get; set; }
+    public DateOnly? Birthdate { get; set; }
 
     public virtual ICollection<BillingAddress> BillingAddresses { get; set; } = new List<BillingAddress>();
 }

@@ -116,10 +116,32 @@ namespace e_commmerce.Controllers
             _context.SaveChanges();
             return Ok();
         }
+
         [HttpGet]
-        public IActionResult ShopList(string orderby)
+        public IActionResult Shop(string orderby, int?[] selectedColors, int? categoryId, decimal? minPrice, decimal? maxPrice)
         {
-            IQueryable<Product> products = _context.Products.Include(p => p.Cate);
+            var categories = _context.Categories.ToList();
+            var colors = _context.Colors.ToList();
+
+            ViewData["Categories"] = categories;
+            ViewData["Colors"] = colors;
+            ViewBag.UserUid = HttpContext.Session.GetString("UserUid");
+            ViewBag.IsAdmin = HttpContext.Session.GetInt32("IsAdmin") == 1;
+
+            IQueryable<Product> products = _context.Products.Include(p => p.Cate).AsQueryable();
+
+            if (selectedColors != null && selectedColors.Length > 0)
+            {
+                products = products.Where(p => p.Color.Name != null && selectedColors.Contains(p.Color.Id));
+            }
+            if (categoryId.HasValue)
+            {
+                products = products.Where(p => p.CateId == categoryId);
+            }
+            if (minPrice != null && maxPrice != null)
+            {
+                products = products.Where(p => p.Price >= minPrice && p.Price <= maxPrice);
+            }
 
             switch (orderby)
             {
@@ -137,9 +159,8 @@ namespace e_commmerce.Controllers
                     break;
             }
 
-            return View(products.ToList());
+            return View(products.Take(6).ToList());
         }
-
 
     }
 }

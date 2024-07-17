@@ -21,6 +21,8 @@ public partial class ShopContext : DbContext
 
     public virtual DbSet<Category> Categories { get; set; }
 
+    public virtual DbSet<Color> Colors { get; set; }
+
     public virtual DbSet<Product> Products { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -33,7 +35,6 @@ public partial class ShopContext : DbContext
         {
             entity.HasKey(e => e.Uid).HasName("PK__Accounts__C5B69A4AFC105B6D");
 
-            entity.Property(e => e.Birthdate).HasColumnType("datetime");
             entity.Property(e => e.FirstName).HasMaxLength(50);
             entity.Property(e => e.LastName).HasMaxLength(50);
             entity.Property(e => e.Pass).HasColumnName("pass");
@@ -63,16 +64,27 @@ public partial class ShopContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(100);
         });
 
+        modelBuilder.Entity<Color>(entity =>
+        {
+            entity.ToTable("Color");
+
+            entity.Property(e => e.Name).HasMaxLength(100);
+        });
+
         modelBuilder.Entity<Product>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Products__3214EC07A2793DA3");
 
             entity.Property(e => e.CateId).HasColumnName("cateID");
-            entity.Property(e => e.Price).HasColumnType("money");
+            entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");
 
             entity.HasOne(d => d.Cate).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CateId)
                 .HasConstraintName("FK__Products__cateID__3B75D760");
+
+            entity.HasOne(d => d.Color).WithMany(p => p.Products)
+                .HasForeignKey(d => d.ColorId)
+                .HasConstraintName("FK_Products_Color");
         });
 
         OnModelCreatingPartial(modelBuilder);

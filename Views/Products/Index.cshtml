@@ -36,7 +36,7 @@
                         <img src="@item.ImagePath" alt="@item.Name" style="width: 100px; height: auto;" />
                     }
                 </td>
-                <td>@item.Price VND</td>
+                <td>@item.Price.ToString("#,#")</td>
                 <td>@item.Size</td>
                 <td>@item.Description</td>
                 <td>@item.Cate?.Name</td>

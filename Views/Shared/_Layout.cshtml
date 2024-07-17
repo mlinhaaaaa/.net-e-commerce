@@ -45,19 +45,19 @@
                             <ul id="navbarLinks">
                                 <li><a asp-controller="Home" asp-action="Contact" title="Contact">Contact</a></li>
                                 <li><a asp-controller="Home" asp-action="Wishlist" title="wishlist">My wishlist</a></li>
-                                <li><a asp-controller="Account" asp-action="Details" title="My account">My account</a></li>
+                                <li><a asp-controller="Home" asp-action="Account" title="My account">My account</a></li>
                                 <li><a asp-controller="Cart" asp-action="Index" title="My cart">My cart</a></li>
-                                @if (ViewBag.UserUid == null)
+                                @if (ViewBag.UserUid != null)
                                 {
-                                    <li><a asp-controller="Access" asp-action="Login">Login</a></li>
-                                }
-                                else
-                                {
-                                    <li><a asp-controller="Access" asp-action="Logout">Logout</a></li>
                                     @if (ViewBag.IsAdmin)
                                     {
                                         <li><a asp-controller="Home" asp-action="Dashboard" title="Dashboard">Dashboard</a></li>
                                     }
+                                    <li><a asp-controller="Access" asp-action="Logout">Logout</a></li>
+                                }
+                                else
+                                {
+                                    <li><a asp-controller="Access" asp-action="Login">Login</a></li>
                                 }
                             </ul>
                         </div>
@@ -149,26 +149,9 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#">shop</a>
-                                            <div class="mega_menu jewelry">
-                                                <div class="mega_items jewelry">
-                                                    <ul>
-                                                        <li>
-                                                            <a asp-area="" asp-controller="Products" asp-action="ShopList">
-                                                                Shoplist
-                                                            </a>
-                                                        </li>
-                                                        <li><a href="shop-fullwidth.html">shop Full Width Grid</a></li>
-                                                        <li><a href="shop-fullwidth-list.html">shop Full Width list</a></li>
-                                                        <li><a href="shop-sidebar.html">shop Right Sidebar</a></li>
-                                                        <li><a href="shop-sidebar-list.html">shop list Right Sidebar</a></li>
-                                                        <li><a href="single-product.html">Product Details</a></li>
-                                                        <li><a href="single-product-sidebar.html">Product sidebar</a></li>
-                                                        <li><a href="single-product-video.html">Product Details video</a></li>
-                                                        <li><a href="single-product-gallery.html">Product Details Gallery</a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
+                                            <a asp-area="" asp-controller="Products" asp-action="Shop">
+                                                <span>Shop</span>
+                                            </a>
                                         </li>
                                         <li>
                                             <a href="#">pages</a>

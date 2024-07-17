@@ -19,5 +19,9 @@ public partial class Product
 
     public int? CateId { get; set; }
 
+    public int? ColorId { get; set; }
+
     public virtual Category? Cate { get; set; }
+
+    public virtual Color? Color { get; set; }
 }

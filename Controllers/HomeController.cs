@@ -107,43 +107,6 @@ namespace e_commmerce.Controllers
             return View(viewModel);
         }
 
-        public IActionResult CreateBillingAddress(BillingAddress model)
-        {
-            SetViewBagSessionValues();
-            if (!ModelState.IsValid)
-            {
-                return RedirectToAction("Account");
-            }
-
-            try
-            {
-                var userUid = HttpContext.Session.GetInt32("UserUid");
-
-                if (userUid == null)
-                {
-                    return RedirectToAction("Login", "Access");
-                }
-
-                var account = _context.Accounts.FirstOrDefault(a => a.Uid == userUid);
-                if (account == null)
-                {
-                    return RedirectToAction("Login", "Access");
-                }
-
-                model.AccountUid = account.Uid;
-
-                _context.BillingAddresses.Add(model);
-                _context.SaveChanges();
-
-                return RedirectToAction("Account");
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", "Unable to save changes. " + ex.Message);
-                return RedirectToAction("Account");
-            }
-        }
-
         [HttpPost]
         public IActionResult UpdateBillingAddress(BillingAddress model)
         {

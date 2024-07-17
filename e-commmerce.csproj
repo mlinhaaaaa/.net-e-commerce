@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\Products\ShopList.cshtml" />
+    <None Include="Views\Products\Shop.cshtml" />
     <None Include="wwwroot\js\ajax-mail.js" />
     <None Include="wwwroot\js\bootstrap.min.js" />
     <None Include="wwwroot\js\demo\chart-area-demo.js" />
