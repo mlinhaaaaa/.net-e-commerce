@@ -79,9 +79,15 @@
                     <div class="col-lg-9 col-md-9">
                         <div class="header_right_info">
                             <div class="search_bar">
-                                <form asp-action="Search" method="get" class="form">
-                                    <div class="pull-left txt"><input type="text" name="searchString" class="form-control" placeholder="Search by name..." /></div>
-                                    <div class="pull-right"><button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button></div>
+                                <form asp-action="Search" asp-controller="Home" method="get" class="form">
+                                    <div class="pull-left txt">
+                                        <input type="text" name="searchString" class="form-control" placeholder="Search by name..." />
+                                    </div>
+                                    <div class="pull-right">
+                                        <button class="btn btn-default" type="submit">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
                                     <div class="clearfix"></div>
                                 </form>
                             </div>

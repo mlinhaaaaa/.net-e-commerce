@@ -172,6 +172,5 @@ namespace e_commmerce.Controllers
             }
             return PartialView("_ProductListPartial", products);
         }
-
     }
 }

@@ -7,56 +7,53 @@
     var colors = ViewData["Colors"] as List<e_commmerce.Entities.Color>;
 }
 
-<!--pos page start-->
 <div class="pos_page">
-    <!--pos page inner-->
     <div class="container">
-        <!--pos page inner-->
         <div class="pos_page_inner">
-            <!--pos home section-->
             <div class="pos_home_section">
                 <div class="row pos_home">
                     <div class="col-lg-3 col-md-12">
-                        <!--layered categorie-->
                         <div class="sidebar_widget shop_c">
                             <div class="categorie__titile">
                                 <h4>Categories</h4>
                             </div>
                             <div class="layere_categorie">
                                 <ul>
-                                    @foreach (var category in ViewData["Categories"] as List<e_commmerce.Entities.Category>)
+                                    @if (categories != null)
                                     {
-                                        <li>
-                                            <label for="category-@category.Cid">
-                                                <a href="@Url.Action("Shop", "Products", new { orderby = ViewBag.OrderBy, categoryId = category.Cid })">
-                                                    @category.Name <span>(@category.Products.Count)</span>
-                                                </a>
-                                            </label>
-                                        </li>
+                                        foreach (var category in categories)
+                                        {
+                                            <li>
+                                                <label for="category-@category.Cid">
+                                                    <a href="@Url.Action("Shop", "Products", new { orderby = ViewBag.OrderBy, categoryId = category.Cid })">
+                                                        @category.Name <span>(@category.Products.Count)</span>
+                                                    </a>
+                                                </label>
+                                            </li>
+                                        }
                                     }
                                 </ul>
                             </div>
                         </div>
-                        <!--layered categorie end-->
-                        <!--color area start-->
                         <div class="sidebar_widget color">
                             <h2>Color</h2>
                             <div class="widget_color">
                                 <ul>
-                                    @foreach (var color in colors)
+                                    @if (colors != null)
                                     {
-                                        <li>
-                                            <a href="@Url.Action("Shop", "Products", new { orderby = ViewBag.Orderby, selectedColors = color.Id })">
-                                                @color.Name
-                                                <span>(@color.Products.Count)</span>
-                                            </a>
-                                        </li>
+                                        foreach (var color in colors)
+                                        {
+                                            <li>
+                                                <a href="@Url.Action("Shop", "Products", new { orderby = ViewBag.Orderby, selectedColors = color.Id })">
+                                                    @color.Name
+                                                    <span>(@color.Products.Count)</span>
+                                                </a>
+                                            </li>
+                                        }
                                     }
                                 </ul>
                             </div>
                         </div>
-                        <!--color area end-->
-                        <!-- Price Slider Start -->
                         <div class="sidebar_widget price">
                             <h2>Price</h2>
                             <div class="ca_search_filters">
@@ -64,8 +61,6 @@
                                 <div id="slider-range"></div>
                             </div>
                         </div>
-                        <!-- Price Slider End -->
-                        <!--special product start-->
                         <div class="sidebar_widget special">
                             <div class="block_title">
                                 <h3>Special Products</h3>
@@ -113,15 +108,11 @@
                                 </div>
                             </div>
                         </div>
-                        <!--special product end-->
                     </div>
                     <div class="col-lg-9 col-md-12">
-                        <!--banner slider start-->
                         <div class="banner_slider mb-35">
                             <img src="~/img/banner/bannner10.jpg" alt="">
                         </div>
-                        <!--banner slider start-->
-                        <!--shop toolbar start-->
                         <div class="shop_toolbar list_toolbar mb-35">
                             <div class="list_button">
                                 <ul class="nav" role="tablist">
@@ -149,24 +140,21 @@
                                 </form>
                             </div>
                         </div>
-                        <!--shop toolbar end-->
                         <div class="shop_tab_product">
                             <div id="product-list">
-                                @Html.Partial("_ProductListPartial", Model)
+                                @Html.Partial("~/Views/Products/_ProductListPartial.cshtml", Model)
                             </div>
                             <button id="load-more-button" data-skip="6" data-take="6">Load More</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <!--pos home section end-->
         </div>
     </div>
-    <!--pos page inner end-->
 </div>
-<!--pos page end-->
 @section Scripts {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script>
         $(function () {
             $("#slider-range").slider({
@@ -177,51 +165,17 @@
                 slide: function (event, ui) {
                     $("#amount").val(ui.values[0] + "₫ - " + ui.values[1] + "₫");
                 },
-                stop: function (event, ui) {
-                    filterProducts(ui.values[0], ui.values[1]);
+                change: function (event, ui) {
+                    var minPrice = ui.values[0];
+                    var maxPrice = ui.values[1];
+                    var url = new URL(window.location.href);
+                    url.searchParams.set('minPrice', minPrice);
+                    url.searchParams.set('maxPrice', maxPrice);
+                    window.location.href = url.href;
                 }
             });
-            $("#amount").val( $("#slider-range").slider("values", 0) +
+            $("#amount").val($("#slider-range").slider("values", 0) +
                 "₫ - " + $("#slider-range").slider("values", 1) + "₫");
-        });
-
-        function filterProducts(minPrice, maxPrice) {
-            $.ajax({
-                url: "@Url.Action("Shop", "Products")",
-                type: "GET",
-                data: {
-                    minPrice: minPrice,
-                    maxPrice: maxPrice
-                },
-                success: function (data) {
-                    $(".shop_tab_product").html(data);
-                },
-                error: function () {
-                    alert("Đã xảy ra lỗi khi lọc sản phẩm.");
-                }
-            });
-        };
-
-        $(document).ready(function () {
-            $('#load-more-button').click(function () {
-                var skip = $(this).data('skip');
-                var take = $(this).data('take');
-
-                $.ajax({
-                    url: '@Url.Action("LoadMore", "Products")',
-                    type: 'POST',
-                    data: { skip: skip, take: take },
-                    success: function (response) {
-                        if (response.success === false) {
-                            alert(response.message);
-                            $('#load-more-button').hide();
-                        } else {
-                            $('#product-list').append(response);
-                            $('#load-more-button').data('skip', skip + take);
-                        }
-                    }
-                });
-            });
         });
     </script>
 }

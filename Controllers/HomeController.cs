@@ -161,13 +161,13 @@ namespace e_commmerce.Controllers
         public async Task<IActionResult> Search(string searchString)
         {
             SetViewBagSessionValues();
-            var Products = from n in _context.Products
+            var products = from n in _context.Products
                            select n;
             if (!string.IsNullOrEmpty(searchString))
             {
-                Products = Products.Where(s => s.Name.Contains(searchString));
+                products = products.Where(s => s.Name.Contains(searchString));
             }
-            return View("Index", await Products.ToListAsync());
+            return View("/Views/Products/Shop.cshtml", await products.ToListAsync());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
