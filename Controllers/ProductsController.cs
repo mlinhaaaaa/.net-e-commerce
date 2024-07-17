@@ -162,5 +162,16 @@ namespace e_commmerce.Controllers
             return View(products.Take(6).ToList());
         }
 
+        [HttpPost]
+        public IActionResult LoadMore(int skip, int take)
+        {
+            var products = _context.Products.Skip(skip).Take(take).ToList();
+            if (products == null || !products.Any())
+            {
+                return Json(new { success = false, message = "No more products." });
+            }
+            return PartialView("_ProductListPartial", products);
+        }
+
     }
 }

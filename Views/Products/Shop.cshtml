@@ -202,5 +202,26 @@
             });
         };
 
+        $(document).ready(function () {
+            $('#load-more-button').click(function () {
+                var skip = $(this).data('skip');
+                var take = $(this).data('take');
+
+                $.ajax({
+                    url: '@Url.Action("LoadMore", "Products")',
+                    type: 'POST',
+                    data: { skip: skip, take: take },
+                    success: function (response) {
+                        if (response.success === false) {
+                            alert(response.message);
+                            $('#load-more-button').hide();
+                        } else {
+                            $('#product-list').append(response);
+                            $('#load-more-button').data('skip', skip + take);
+                        }
+                    }
+                });
+            });
+        });
     </script>
 }
