@@ -1,0 +1,103 @@
+﻿
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Contact";
+}
+
+<div class="pos_page">
+    <div class="container">
+        <!--pos page inner-->
+        <div class="pos_page_inner">
+            <!--contact area start-->
+            <div class="contact_area">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="contact_message">
+                            <h3>Tell us your project</h3>
+                            <form id="contact-form" method="POST">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <input name="name" placeholder="Name *" type="text">
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <input name="email" placeholder="Email *" type="email">
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <input name="subject" placeholder="Subject *" type="text">
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <input name="phone" placeholder="Phone *" type="text">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="contact_textarea">
+                                            <textarea placeholder="Message *" name="message" class="form-control2"></textarea>
+                                        </div>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#thankYouModal">
+                                            Send Message
+                                        </button>
+
+                                    </div>
+                                    <div class="col-12">
+                                        <p class="form-messege">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="thankYouModal" tabindex="-1" role="dialog" aria-labelledby="thankYouModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="thankYouModalLabel">Thank You!</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Your message has been sent successfully. We will get back to you soon.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-6 col-md-12">
+                        <div class="contact_message contact_info">
+                            <h3>contact us</h3>
+                            <p>Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram anteposuerit litterarum formas human.</p>
+                            <ul>
+                                <li><i class="fa fa-fax"></i>  Address : 33 Xô Viết Nghệ Tĩnh, Hoà Cường Nam, Hải Châu, Đà Nẵng, Việt Nam</li>
+                                <li><i class="fa fa-phone"></i> <a href="#">0(1234) 567 890</a></li>
+                                <li><i class="fa fa-envelope-o"></i> Ngominh0141@gmail.com</li>
+                            </ul>
+                            <h3><strong>Working hours</strong></h3>
+                            <p><strong>Monday – Saturday</strong>:  08AM – 17PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--contact area end-->
+            <div class="contact_map">
+                <div class="row">
+                    <div class="col-12">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3834.644158831356!2d108.2213025!3d16.0320289!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314218389cf02c2b%3A0xbdc63233587e2d88!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyDEkMO0bmcgw4E!5e0!3m2!1svi!2s!4v1721238765623!5m2!1svi!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--pos page inner end-->
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $('#thankYouModal').on('hidden.bs.modal', function () {
+            $('#contact-form')[0].reset();
+        });
+    </script>
+}
