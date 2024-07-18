@@ -1,6 +1,4 @@
-﻿@model List<e_commmerce.Entities.Product>
-
-@{
+﻿@{
     Layout = "_Layout";
     ViewData["Title"] = "Shop";
     var categories = ViewData["Categories"] as List<e_commmerce.Entities.Category>;
@@ -13,94 +11,148 @@
             <div class="pos_home_section">
                 <div class="row pos_home">
                     <div class="col-lg-3 col-md-12">
-                        <div class="sidebar_widget shop_c">
-                            <div class="categorie__titile">
-                                <h4>Categories</h4>
-                            </div>
-                            <div class="layere_categorie">
-                                <ul>
-                                    @if (categories != null)
-                                    {
-                                        foreach (var category in categories)
-                                        {
-                                            <li>
-                                                <label for="category-@category.Cid">
-                                                    <a href="@Url.Action("Shop", "Products", new { orderby = ViewBag.OrderBy, categoryId = category.Cid })">
-                                                        @category.Name <span>(@category.Products.Count)</span>
-                                                    </a>
-                                                </label>
-                                            </li>
-                                        }
-                                    }
-                                </ul>
-                            </div>
+                    <div class="sidebar_widget shop_c">
+                        <div class="categorie__titile">
+                            <h4>Categories</h4>
                         </div>
-                        <div class="sidebar_widget color">
-                            <h2>Color</h2>
-                            <div class="widget_color">
-                                <ul>
-                                    @if (colors != null)
+                        <div class="layere_categorie">
+                            <ul>
+                                @if (categories != null)
+                                {
+                                    foreach (var category in categories)
                                     {
-                                        foreach (var color in colors)
-                                        {
-                                            <li>
-                                                <a href="@Url.Action("Shop", "Products", new { orderby = ViewBag.Orderby, selectedColors = color.Id })">
-                                                    @color.Name
-                                                    <span>(@color.Products.Count)</span>
+                                        <li>
+                                            <label for="category-@category.Cid">
+                                                <a href="@Url.Action("Shop", "Products", new { orderby = ViewBag.OrderBy, categoryId = category.Cid })">
+                                                    @category.Name <span>(@category.Products.Count)</span>
                                                 </a>
-                                            </li>
-                                        }
+                                            </label>
+                                        </li>
                                     }
-                                </ul>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="sidebar_widget color">
+                        <h2>Color</h2>
+                        <div class="widget_color">
+                            <ul>
+                                @if (colors != null)
+                                {
+                                    foreach (var color in colors)
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("Shop", "Products", new { orderby = ViewBag.Orderby, selectedColors = color.Id })">
+                                                @color.Name
+                                                <span>(@color.Products.Count)</span>
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="sidebar_widget price">
+                        <h2>Price</h2>
+                        <div class="ca_search_filters">
+                            <input type="text" name="text" id="amount">
+                            <div id="slider-range"></div>
+                        </div>
+                    </div>
+                    <div class="sidebar_widget special">
+                        <div class="block_title">
+                            <h3>Special Products</h3>
+                        </div>
+                        <div class="special_product_inner mb-20">
+                            <div class="special_p_thumb">
+                                <a href="single-product.html"><img src="~/img/cart/cart3.jpg" alt=""></a>
+                            </div>
+                            <div class="small_p_desc">
+                                <div class="product_ratting">
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                    </ul>
+                                </div>
+                                <h3><a href="single-product.html">Lorem ipsum dolor</a></h3>
+                                <div class="special_product_proce">
+                                    <span class="old_price">$124.58</span>
+                                    <span class="new_price">$118.35</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="special_product_inner">
+                            <div class="special_p_thumb">
+                                <a href="single-product.html"><img src="~/img/cart/cart18.jpg" alt=""></a>
+                            </div>
+                            <div class="small_p_desc">
+                                <div class="product_ratting">
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                    </ul>
+                                </div>
+                                <h3><a href="single-product.html">Printed Summer</a></h3>
+                                <div class="special_product_proce">
+                                    <span class="old_price">$124.58</span>
+                                    <span class="new_price">$118.35</span>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
                     <div class="col-lg-9 col-md-12">
-                        <div class="banner_slider mb-35">
-                            <img src="~/img/banner/bannner10.jpg" alt="">
+                    <div class="banner_slider mb-35">
+                        <img src="~/img/banner/bannner10.jpg" alt="">
+                    </div>
+                    <div class="shop_toolbar list_toolbar mb-35">
+                        <div class="list_button">
+                            <ul class="nav" role="tablist">
+                                <li>
+                                    <a data-toggle="tab" href="#large" role="tab" aria-controls="large" aria-selected="true"><i class="fa fa-th-large"></i></a>
+                                </li>
+                                <li>
+                                    <a class="active" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false"><i class="fa fa-th-list"></i></a>
+                                </li>
+                            </ul>
                         </div>
-                        <div class="shop_toolbar list_toolbar mb-35">
-                            <div class="list_button">
-                                <ul class="nav" role="tablist">
-                                    <li>
-                                        <a data-toggle="tab" href="#large" role="tab" aria-controls="large" aria-selected="true"><i class="fa fa-th-large"></i></a>
-                                    </li>
-                                    <li>
-                                        <a class="active" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false"><i class="fa fa-th-list"></i></a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="page_amount">
-                                <p>Showing 1–9 of @Model.Count results</p>
-                            </div>
-                            <div class="select_option">
-                                <form asp-action="Shop" asp-controller="Products" method="get">
-                                    <label>Sort By</label>
-                                    <select name="orderby" id="short">
-                                        <option value="position">Position</option>
-                                        <option value="price-lowest">Price: Lowest</option>
-                                        <option value="price-highest">Price: Highest</option>
-                                        <option value="name-ascending">Product Name: A-Z</option>
-                                    </select>
-                                    <button type="submit">Sort</button>
-                                </form>
-                            </div>
+                        <div class="page_amount">
+                            <p>Showing 1–9 of @Model.Count results</p>
                         </div>
-                        <div class="shop_tab_product">
-                            <div id="product-list">
-                                @Html.Partial("~/Views/Products/_ProductListPartial.cshtml", Model)
-                            </div>
-                            <button id="load-more-button" data-skip="6" data-take="6">Load More</button>
+                        <div class="select_option">
+                            <form asp-action="Shop" asp-controller="Products" method="get">
+                                <label>Sort By</label>
+                                <select name="orderby" id="short">
+                                    <option value="position">Position</option>
+                                    <option value="price-lowest">Price: Lowest</option>
+                                    <option value="price-highest">Price: Highest</option>
+                                    <option value="name-ascending">Product Name: A-Z</option>
+                                </select>
+                                <button type="submit">Sort</button>
+                            </form>
                         </div>
                     </div>
+                    <div class="shop_tab_product">
+                        <div id="product-list">
+                            @Html.Partial("~/Views/Products/_ProductListPartial.cshtml")
+                        </div>
+                        <button id="load-more-button" data-skip="6" data-take="6">Load More</button>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 @section Scripts {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script>
         $(function () {
             $("#slider-range").slider({
@@ -111,36 +163,22 @@
                 slide: function (event, ui) {
                     $("#amount").val(ui.values[0] + "₫ - " + ui.values[1] + "₫");
                 },
-                stop: function (event, ui) {
-                    filterProducts(ui.values[0], ui.values[1]);
+                change: function (event, ui) {
+                    var minPrice = ui.values[0];
+                    var maxPrice = ui.values[1];
+                    var url = new URL(window.location.href);
+                    url.searchParams.set('minPrice', minPrice);
+                    url.searchParams.set('maxPrice', maxPrice);
+                    window.location.href = url.href;
                 }
             });
             $("#amount").val($("#slider-range").slider("values", 0) +
                 "₫ - " + $("#slider-range").slider("values", 1) + "₫");
         });
-
-        function filterProducts(minPrice, maxPrice) {
-            $.ajax({
-                url: "@Url.Action("Shop", "Products")",
-                type: "GET",
-                data: {
-                    minPrice: minPrice,
-                    maxPrice: maxPrice
-                },
-                success: function (data) {
-                    $(".shop_tab_product").html(data);
-                },
-                error: function () {
-                    alert("An error occurred while filtering products.");
-                }
-            });
-        };
-
         $(document).ready(function () {
             $('#load-more-button').click(function () {
                 var skip = $(this).data('skip');
                 var take = $(this).data('take');
-
                 $.ajax({
                     url: '@Url.Action("LoadMore", "Products")',
                     type: 'POST',
@@ -159,4 +197,3 @@
         });
     </script>
 }
-
