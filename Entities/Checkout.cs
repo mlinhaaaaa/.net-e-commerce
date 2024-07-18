@@ -7,11 +7,11 @@ public partial class Checkout
 {
     public int CheckId { get; set; }
 
-    public int ItemId { get; set; }
+    public int CartId { get; set; }
 
     public decimal TotalAmount { get; set; }
 
     public DateTime CheckoutDate { get; set; }
 
-    public virtual CartItem Item { get; set; } = null!;
+    public virtual Cart Cart { get; set; } = null!;
 }

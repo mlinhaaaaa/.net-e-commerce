@@ -146,7 +146,7 @@
                                                     <img src="~/img/cart/span-new.png" alt="New">
                                                 </div>
                                                 <div class="product_action">
-                                                    <button type="button" class="btn btn-link add-to-cart" data-prod-id="@product.ProdId"><i class="fa fa-shopping-cart"></i> Add to cart</button>
+                                                    <a class="add-to-cart" data-prod-id="@product.ProdId"><i class="fa fa-shopping-cart"></i> Add to cart</a>
                                                 </div>
                                             </div>
                                             <div class="product_content">
@@ -155,7 +155,7 @@
                                             </div>
                                             <div class="product_info">
                                                 <ul>
-                                                    <li><a href="#" title="Add to Wishlist">Add to Wishlist</a></li>
+                                                    <li><a href="#" class="add-to-wishlist" data-prod-id="123" title="Add to Wishlist">Add to Wishlist</a></li>
                                                     <li><a href="#" data-toggle="modal" data-target="#modal_box" title="Quick view">View Detail</a></li>
                                                 </ul>
                                             </div>
@@ -287,6 +287,32 @@
             $('.add-to-cart').click(function () {
                 var prodId = $(this).data('prod-id');
                 addToCart(prodId);
+            });
+        });
+    </script>
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        $(document).ready(function () {
+            $('.add-to-wishlist').on('click', function (event) {
+                event.preventDefault();
+                var prodId = $(this).data('prod-id');
+                // Gửi yêu cầu AJAX để thêm sản phẩm vào danh sách yêu thích
+                $.ajax({
+                    url: '/wishlist/add', // Đường dẫn đến API thêm vào danh sách yêu thích
+                    method: 'POST',
+                    data: { productId: prodId },
+                    success: function (response) {
+                        // Xử lý phản hồi từ server (ví dụ: hiển thị thông báo thành công)
+                        alert('Product added to wishlist successfully!');
+                    },
+                    error: function (error) {
+                        // Xử lý lỗi (nếu có)
+                        alert('Error adding product to wishlist.');
+                    }
+                });
             });
         });
     </script>

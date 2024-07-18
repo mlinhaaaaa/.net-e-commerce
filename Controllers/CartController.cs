@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using e_commmerce.Entities;
-using Microsoft.AspNetCore.Http;
+using System.Linq;
 using System.Threading.Tasks;
 
 public class CartController : Controller
@@ -13,51 +13,111 @@ public class CartController : Controller
         _context = context;
     }
 
+    //public IActionResult Checkout()
+    //{
+       
+    //    return View();
+    //}
+
+    public async Task<IActionResult> Checkout()
+    {
+        int userId = 1; // Replace with logic to get userId from session or user identity
+
+        var cartItems = await _context.Carts
+            .Include(c => c.Prod)
+            .Where(c => c.UserId == userId)
+            .ToListAsync();
+
+        return View(cartItems);
+    }
+
+    public async Task<IActionResult> Cart()
+    {
+        int userId = 1; // Replace with logic to get userId from session or user identity
+
+        var cartItems = await _context.Carts
+            .Include(c => c.Prod)
+            .Where(c => c.UserId == userId)
+            .ToListAsync();
+
+        return View(cartItems);
+    }
+
     [HttpPost]
     public async Task<IActionResult> AddToCart(int ProdId)
     {
-        // Ensure the product exists
         var product = await _context.Products.FindAsync(ProdId);
         if (product == null)
         {
-            return NotFound(); // Or handle the case where product is not found
+            return NotFound();
         }
 
-        // Get or create CartId from session or database
         int cartId = GetOrCreateCartId();
 
-        // Check if the product is already in the cart
-        var cartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == cartId && ci.ProdId == ProdId);
+        var cartItem = await _context.Carts
+            .FirstOrDefaultAsync(ci => ci.UserId == cartId && ci.ProdId == ProdId);
+
         if (cartItem != null)
         {
-            // Increase quantity if the product is already in cart
             cartItem.Quantity += 1;
         }
         else
         {
-            // Add new cart item if the product is not in cart
-            cartItem = new CartItem
+            cartItem = new Cart
             {
-                CartId = cartId,
+                UserId = cartId,
                 ProdId = ProdId,
                 Quantity = 1
             };
-            _context.CartItems.Add(cartItem);
+            _context.Carts.Add(cartItem);
         }
 
-        // Save changes to database
         await _context.SaveChangesAsync();
 
-        // Return Ok if adding to cart succeeds
         return Ok(new { message = "Product added to cart successfully" });
     }
 
-    // Helper method to get or create CartId from session or database
+    [HttpPost]
+    public async Task<IActionResult> UpdateQuantity(int cartItemId, int quantity)
+    {
+        var cartItem = await _context.Carts.FindAsync(cartItemId);
+
+        if (cartItem == null)
+        {
+            return NotFound();
+        }
+
+        if (quantity <= 0)
+        {
+            return BadRequest("Quantity must be greater than zero.");
+        }
+
+        cartItem.Quantity = quantity;
+        _context.Carts.Update(cartItem);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Cart");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RemoveFromCart(int cartItemId)
+    {
+        var cartItem = await _context.Carts.FindAsync(cartItemId);
+
+        if (cartItem == null)
+        {
+            return NotFound();
+        }
+
+        _context.Carts.Remove(cartItem);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Cart");
+    }
+
     private int GetOrCreateCartId()
     {
-        // Example implementation to get CartId from session or database
-        // Replace with your own logic to retrieve or create CartId
-        int cartId = 1; // Replace with actual implementation
+        int cartId = 1; // Replace with actual logic to get or create cartId
         return cartId;
     }
 }

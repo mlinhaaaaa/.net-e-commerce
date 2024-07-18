@@ -20,4 +20,6 @@ public partial class Account
     public int IsAdmin { get; set; }
 
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
+
+    public virtual ICollection<Wishlist> Wishlists { get; set; } = new List<Wishlist>();
 }

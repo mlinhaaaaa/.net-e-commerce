@@ -19,13 +19,13 @@ public partial class ShopContext : DbContext
 
     public virtual DbSet<Cart> Carts { get; set; }
 
-    public virtual DbSet<CartItem> CartItems { get; set; }
-
     public virtual DbSet<Category> Categories { get; set; }
 
     public virtual DbSet<Checkout> Checkouts { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
+
+    public virtual DbSet<Wishlist> Wishlists { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -49,37 +49,25 @@ public partial class ShopContext : DbContext
 
         modelBuilder.Entity<Cart>(entity =>
         {
+            entity.HasKey(e => e.CartId).HasName("PK_CartItem");
+
             entity.ToTable("Cart");
 
-            entity.Property(e => e.CartId).HasColumnName("cartID");
-            entity.Property(e => e.UserId).HasColumnName("userID");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Carts)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Cart_Accounts");
-        });
-
-        modelBuilder.Entity<CartItem>(entity =>
-        {
-            entity.HasKey(e => e.ItemId);
-
-            entity.ToTable("CartItem");
-
-            entity.Property(e => e.ItemId).HasColumnName("itemID");
             entity.Property(e => e.CartId).HasColumnName("cartID");
             entity.Property(e => e.ProdId)
                 .HasDefaultValueSql("(NULL)")
                 .HasColumnName("prodID");
             entity.Property(e => e.Quantity).HasDefaultValue(1);
+            entity.Property(e => e.UserId).HasColumnName("userID");
 
-            entity.HasOne(d => d.Cart).WithMany(p => p.CartItems)
-                .HasForeignKey(d => d.CartId)
-                .HasConstraintName("FK_CartItem_Cart");
-
-            entity.HasOne(d => d.Prod).WithMany(p => p.CartItems)
+            entity.HasOne(d => d.Prod).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.ProdId)
                 .HasConstraintName("FK_Cartitem_Products");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Carts)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Cart_Accounts");
         });
 
         modelBuilder.Entity<Category>(entity =>
@@ -97,17 +85,17 @@ public partial class ShopContext : DbContext
             entity.ToTable("Checkout");
 
             entity.Property(e => e.CheckId).HasColumnName("checkID");
+            entity.Property(e => e.CartId).HasColumnName("cartID");
             entity.Property(e => e.CheckoutDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("checkoutDate");
-            entity.Property(e => e.ItemId).HasColumnName("itemID");
             entity.Property(e => e.TotalAmount)
                 .HasColumnType("money")
                 .HasColumnName("totalAmount");
 
-            entity.HasOne(d => d.Item).WithMany(p => p.Checkouts)
-                .HasForeignKey(d => d.ItemId)
+            entity.HasOne(d => d.Cart).WithMany(p => p.Checkouts)
+                .HasForeignKey(d => d.CartId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Checkout_CartItem");
         });
@@ -124,6 +112,28 @@ public partial class ShopContext : DbContext
             entity.HasOne(d => d.Cate).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CateId)
                 .HasConstraintName("FK__Products__cateID__45F365D3");
+        });
+
+        modelBuilder.Entity<Wishlist>(entity =>
+        {
+            entity.HasKey(e => e.WishId);
+
+            entity.ToTable("Wishlist");
+
+            entity.Property(e => e.WishId)
+                .ValueGeneratedNever()
+                .HasColumnName("wishID");
+            entity.Property(e => e.ProdId).HasColumnName("prodID");
+            entity.Property(e => e.UserId).HasColumnName("userID");
+
+            entity.HasOne(d => d.Prod).WithMany(p => p.Wishlists)
+                .HasForeignKey(d => d.ProdId)
+                .HasConstraintName("FK_Wishlist_Products");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Wishlists)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Wishlist_Accounts");
         });
 
         OnModelCreatingPartial(modelBuilder);
