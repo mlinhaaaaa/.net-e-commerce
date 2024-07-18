@@ -11,9 +11,9 @@ public partial class Account
 
     public string? LastName { get; set; }
 
-    public string User { get; set; } = null!;
+    public string? User { get; set; }
 
-    public string Pass { get; set; } = null!;
+    public string? Pass { get; set; }
 
     public string? ConfirmPassword { get; set; }
 

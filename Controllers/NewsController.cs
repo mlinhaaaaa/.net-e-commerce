@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using e_commmerce.Entities;
 using Microsoft.AspNetCore.Hosting;
 using System.Drawing;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace e_commmerce.Controllers
 {
@@ -23,15 +24,51 @@ namespace e_commmerce.Controllers
         }
 
         // GET: News
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> News(int? page, int pageSize = 3)
         {
-            return View(await _context.News.ToListAsync());
+            int pageNumber = page ?? 1;
+
+            var newsItems = await _context.News
+                                        .Include(p => p.Cate)
+                                        .Skip((pageNumber - 1) * pageSize)
+                                        .Take(pageSize)
+                                        .ToListAsync();
+
+            var totalNewsCount = await _context.News.CountAsync();
+
+            ViewData["CurrentPage"] = pageNumber;
+            ViewData["TotalPages"] = (int)Math.Ceiling(totalNewsCount / (double)pageSize);
+
+            return View(newsItems);
         }
-        
-        public  IActionResult News()
+
+        public  IActionResult Index()
         {
-            return View( _context.News.ToList());
+            return View( _context.News.Include(n => n.Cate).ToList());
         }
+        public IActionResult NewsDetails(int id)
+        {
+            var news = _context.News
+                               .Include(n => n.Cate)
+                               .FirstOrDefault(x => x.IdN == id);
+
+            if (news == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["Category"] = news.Cate;
+
+            return View(news);
+        }
+
+        public IActionResult GetCategories()
+        {
+            var categories = _context.Categories.Select(c => new { Name = c.Name }).ToList();
+            return Json(categories);
+        }
+
+
         // GET: News/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -53,48 +90,53 @@ namespace e_commmerce.Controllers
         // GET: News/Create
         public IActionResult Create()
         {
+            var categories = _context.Categories.ToList();
+
+            ViewData["Categories"] = categories;
+
             return View();
         }
 
         // POST: News/Create
         [HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> Create(IFormFile Image, string Title, string Description, DateTime TimeCreate)
-{
-    if (string.IsNullOrEmpty(Title) || string.IsNullOrEmpty(Description) || TimeCreate == default)
-    {
-        ModelState.AddModelError("", "All fields are required.");
-        return View();
-    }
-
-    string imagePath = null;
-    if (Image != null && Image.Length > 0)
-    {
-        string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "anh");
-        Directory.CreateDirectory(uploadsFolder);
-
-        string uniqueFileName = Guid.NewGuid().ToString() + "_" + Image.FileName;
-        imagePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-        using (var fileStream = new FileStream(imagePath, FileMode.Create))
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(IFormFile Image, string Title, string Description, DateTime TimeCreate, int CateId)
         {
-            await Image.CopyToAsync(fileStream);
+            if (string.IsNullOrEmpty(Title) || string.IsNullOrEmpty(Description) || TimeCreate == default || CateId == 0)
+            {
+                ModelState.AddModelError("", "All fields are required.");
+                return View();
+            }
+
+            string imagePath = null;
+            if (Image != null && Image.Length > 0)
+            {
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "anh");
+                Directory.CreateDirectory(uploadsFolder);
+
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + Image.FileName;
+                imagePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                {
+                    await Image.CopyToAsync(fileStream);
+                }
+                imagePath = "/anh/" + uniqueFileName;
+            }
+
+            var news = new News
+            {
+                Title = Title,
+                Image = imagePath,
+                Description = Description,
+                TimeCreate = TimeCreate,
+                CateId = CateId,
+            };
+
+            _context.News.Add(news);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
-        imagePath = "/anh/" + uniqueFileName; 
-    }
-
-    var news = new News
-    {
-        Title = Title,
-        Image = imagePath,
-        Description = Description,
-        TimeCreate = TimeCreate,
-    };
-
-    _context.News.Add(news);
-    await _context.SaveChangesAsync();
-    return RedirectToAction(nameof(Index));
-}
 
         // GET: News/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -109,6 +151,7 @@ public async Task<IActionResult> Create(IFormFile Image, string Title, string De
             {
                 return NotFound();
             }
+            ViewData["Categories"] = _context.Categories.ToList();
             return View(news);
         }
 
@@ -117,7 +160,7 @@ public async Task<IActionResult> Create(IFormFile Image, string Title, string De
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, IFormFile Image, string Title, string Description, DateTime TimeCreate)
+        public async Task<IActionResult> Edit(int id, IFormFile Image, string Title, string Description, DateTime TimeCreate, int CateId)
         {
             var news = await _context.News.FindAsync(id);
             if (news == null)
@@ -161,6 +204,7 @@ public async Task<IActionResult> Create(IFormFile Image, string Title, string De
                     news.Image = imagePath;
                     news.Description = Description;
                     news.TimeCreate = TimeCreate;
+                    news.CateId = CateId;
 
                     _context.Update(news);
                     await _context.SaveChangesAsync();
@@ -178,6 +222,7 @@ public async Task<IActionResult> Create(IFormFile Image, string Title, string De
                     }
                 }
             }
+            
 
             return View(news); // Trả về view chỉnh sửa nếu ModelState không hợp lệ
         }

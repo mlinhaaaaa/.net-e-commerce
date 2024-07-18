@@ -32,16 +32,11 @@ public partial class ShopContext : DbContext
         modelBuilder.Entity<Account>(entity =>
         {
             entity.HasKey(e => e.Uid);
-
-            entity.Property(e => e.FirstName).HasMaxLength(50);
-            entity.Property(e => e.LastName).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Category>(entity =>
         {
             entity.HasKey(e => e.Cid);
-
-            entity.Property(e => e.Name).HasMaxLength(100);
         });
 
         modelBuilder.Entity<News>(entity =>
@@ -49,13 +44,16 @@ public partial class ShopContext : DbContext
             entity.HasKey(e => e.IdN);
 
             entity.Property(e => e.TimeCreate).HasColumnType("datetime");
-            entity.Property(e => e.Title).HasMaxLength(200);
+
+            entity.HasOne(d => d.Cate).WithMany(p => p.News)
+                .HasForeignKey(d => d.CateId)
+                .HasConstraintName("FK_News_Categories");
         });
 
         modelBuilder.Entity<Product>(entity =>
         {
             entity.Property(e => e.CateId).HasColumnName("CateID");
-            entity.Property(e => e.Price).HasColumnType("money");
+            entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");
 
             entity.HasOne(d => d.Cate).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CateId)

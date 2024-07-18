@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    var categories = ViewData["Categories"] as IEnumerable<e_commmerce.Entities.Category>;
 }
 
 <h1>Create</h1>
@@ -32,6 +33,25 @@
                 <input asp-for="TimeCreate" class="form-control" type="datetime-local" />
                 <span asp-validation-for="TimeCreate" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="CateId" class="control-label"></label>
+                <select asp-for="CateId" class="form-control">
+                    @if (categories != null)
+                    {
+                        foreach (var category in categories)
+                        {
+                            <option value="@category.Cid">@category.Name</option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="">No categories found</option>
+                    }
+                </select>
+                <span asp-validation-for="CateId" class="text-danger"></span>
+            </div>
+
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

@@ -14,7 +14,7 @@ namespace e_commmerce.Controllers
         {
             _context = context;
         }
-        [AdminAuthentication]
+
         public IActionResult Index()
         {
             var data = _context.Categories.Include(c => c.Products).ToList();
