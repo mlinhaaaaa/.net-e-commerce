@@ -19,11 +19,17 @@ public partial class ShopContext : DbContext
 
     public virtual DbSet<BillingAddress> BillingAddresses { get; set; }
 
+    public virtual DbSet<Cart> Carts { get; set; }
+
     public virtual DbSet<Category> Categories { get; set; }
+
+    public virtual DbSet<Checkout> Checkouts { get; set; }
 
     public virtual DbSet<Color> Colors { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
+
+    public virtual DbSet<Wishlist> Wishlists { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -57,11 +63,39 @@ public partial class ShopContext : DbContext
                 .HasConstraintName("FK_BillingAddress_Accounts");
         });
 
+        modelBuilder.Entity<Cart>(entity =>
+        {
+            entity.ToTable("Cart");
+
+            entity.HasOne(d => d.AccountU).WithMany(p => p.Carts)
+                .HasForeignKey(d => d.AccountUid)
+                .HasConstraintName("FK_Cart_Accounts");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.Carts)
+                .HasForeignKey(d => d.ProductId)
+                .HasConstraintName("FK_Cart_Products");
+        });
+
         modelBuilder.Entity<Category>(entity =>
         {
             entity.HasKey(e => e.Cid).HasName("PK__Categori__C1FFD861C159A1EA");
 
             entity.Property(e => e.Name).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<Checkout>(entity =>
+        {
+            entity.ToTable("Checkout");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.CheckoutDate).HasColumnType("datetime");
+            entity.Property(e => e.TotalAmount)
+                .HasColumnType("decimal(18, 0)")
+                .HasColumnName("totalAmount");
+
+            entity.HasOne(d => d.Cart).WithMany(p => p.Checkouts)
+                .HasForeignKey(d => d.CartId)
+                .HasConstraintName("FK_Checkout_Cart");
         });
 
         modelBuilder.Entity<Color>(entity =>
@@ -85,6 +119,21 @@ public partial class ShopContext : DbContext
             entity.HasOne(d => d.Color).WithMany(p => p.Products)
                 .HasForeignKey(d => d.ColorId)
                 .HasConstraintName("FK_Products_Color");
+        });
+
+        modelBuilder.Entity<Wishlist>(entity =>
+        {
+            entity.ToTable("Wishlist");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+
+            entity.HasOne(d => d.AccountU).WithMany(p => p.Wishlists)
+                .HasForeignKey(d => d.AccountUid)
+                .HasConstraintName("FK_Wishlist_Accounts");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.Wishlists)
+                .HasForeignKey(d => d.ProductId)
+                .HasConstraintName("FK_Wishlist_Products");
         });
 
         OnModelCreatingPartial(modelBuilder);

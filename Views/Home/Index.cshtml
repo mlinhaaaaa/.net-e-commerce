@@ -149,11 +149,11 @@
                                                     <img src="~/img/cart/span-new.png" alt="New">
                                                 </div>
                                                 <div class="product_action">
-                                                    <a href="single-product.html"> <i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                                    <a class="add-to-cart" data-prod-id="@product.Id"><i class="fa fa-shopping-cart"></i> Add to cart</a>
                                                 </div>
                                             </div>
                                             <div class="product_content">
-                                                <span class="product_price">$@product.Price</span>
+                                                <span class="product_price">@product.Price.ToString("#,#")₫</span>
                                                 <h3 class="product_title"><a href="#">@product.Name</a></h3>
                                             </div>
                                             <div class="product_info">
@@ -179,16 +179,16 @@
                                     <div class="col-lg-4 col-md-6">
                                         <div class="single_product">
                                             <div class="product_thumb">
-                                                <a href="single-product.html"><img style="width:100%;height: 350px;object-fit: cover;" src="@product.ImagePath" alt="@product.Name"></a>
+                                                <a><img style="width:100%;height: 350px;object-fit: cover;" src="@product.ImagePath" alt="@product.Name"></a>
                                                 <div class="hot_img">
                                                     <img src="~/img/cart/span-hot.png" alt="Hot">
                                                 </div>
                                                 <div class="product_action">
-                                                    <a href="single-product.html"> <i class="fa fa-shopping-cart"></i> Add to cart</a>
-                                                </div>
+                                                <a class="add-to-cart" data-prod-id="@product.Id"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                            </div>
                                             </div>
                                             <div class="product_content">
-                                                <span class="product_price">$@product.Price</span>
+                                                <span class="product_price">@product.Price.ToString("#,#")₫</span>
                                                 <h3 class="product_title"><a href="#">@product.Name</a></h3>
                                             </div>
                                             <div class="product_info">
@@ -278,17 +278,15 @@
 @section scripts {
     <script>
         $(document).ready(function () {
-            // Function to load categories via AJAX
             function loadCategories() {
                 $.ajax({
-                    url: '@Url.Action("GetCategories", "Home")', // Adjust URL as per your routing
+                    url: '@Url.Action("GetCategories", "Home")',
                     type: 'GET',
                     dataType: 'json',
                     success: function (categories) {
                         var categoryList = $('#category-list');
-                        categoryList.empty(); // Clear existing list
+                        categoryList.empty(); 
 
-                        // Populate categories
                         categories.forEach(function (category) {
                             categoryList.append(`<li><a href="/danh-muc/${category.name}">${category.name}</a></li>`);
                         });
@@ -298,9 +296,26 @@
                     }
                 });
             }
-
-            // Load categories when the page loads
             loadCategories();
+        });
+        $(document).ready(function () {
+            function addToCart(prodId) {
+                $.ajax({
+                    url: '@Url.Action("AddToCart", "Cart")',
+                    type: 'POST',
+                    data: { prodId: prodId },
+                    success: function (response) {
+                        alert(response.message);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error adding to cart:', error);
+                    }
+                });
+            }
+            $('.add-to-cart').click(function () {
+                var prodId = $(this).data('prod-id');
+                addToCart(prodId);
+            });
         });
     </script>
 }

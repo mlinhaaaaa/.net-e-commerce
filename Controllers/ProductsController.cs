@@ -118,7 +118,7 @@ namespace e_commmerce.Controllers
         }
 
         [HttpGet]
-        public IActionResult Shop(string orderby, int?[] selectedColors, int? categoryId, decimal? minPrice, decimal? maxPrice)
+        public IActionResult Shop(string orderby, int?[] selectedColors, int? categoryId)
         {
             var categories = _context.Categories.ToList();
             var colors = _context.Colors.ToList();
@@ -138,10 +138,6 @@ namespace e_commmerce.Controllers
             {
                 products = products.Where(p => p.CateId == categoryId);
             }
-            if (minPrice != null && maxPrice != null)
-            {
-                products = products.Where(p => p.Price >= minPrice && p.Price <= maxPrice);
-            }
 
             switch (orderby)
             {
@@ -160,6 +156,18 @@ namespace e_commmerce.Controllers
             }
 
             return View(products.Take(6).ToList());
+        }
+        [HttpGet]
+        public IActionResult FilterPrice(decimal? minPrice, decimal? maxPrice)
+        {
+            IQueryable<Product> products = _context.Products.Include(p => p.Cate).AsQueryable();
+
+            if (minPrice != null && maxPrice != null)
+            {
+                products = products.Where(p => p.Price >= minPrice && p.Price <= maxPrice);
+            }
+
+            return PartialView("_ProductListPartial", products.Take(6).ToList());
         }
 
         [HttpPost]

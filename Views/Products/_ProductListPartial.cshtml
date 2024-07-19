@@ -8,9 +8,6 @@
                 <div class="col-lg-4 col-md-6 col-sm-6">
                     <div class="product_thumb">
                         <a href="single-product.html"><img style="width:100%;height: 350px;object-fit: cover;" src="@product.ImagePath" alt="@product.Name"></a>
-                        <div class="hot_img">
-                            <img src="~/img/cart/span-hot.png" alt="Hot">
-                        </div>
                     </div>
                 </div>
                 <div class="col-lg-8 col-md-6 col-sm-6">
@@ -37,7 +34,11 @@
                         </div>
                         <div class="add_links">
                             <ul>
-                                <li><a href="#" title="add to cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li>
+                                <li>
+                                    <a href="#" class="add-to-cart-btn" data-prod-id="@product.Id" title="add to cart">
+                                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                    </a>
+                                </li>
                                 <li><a href="#" title="add to wishlist"><i class="fa fa-heart" aria-hidden="true"></i></a></li>
                                 <li><a href="#" data-toggle="modal" data-target="#modal_box" title="Quick view"><i class="fa fa-eye" aria-hidden="true"></i></a></li>
                             </ul>

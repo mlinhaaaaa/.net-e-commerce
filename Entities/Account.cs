@@ -24,4 +24,8 @@ public partial class Account
     public DateOnly? Birthdate { get; set; }
 
     public virtual ICollection<BillingAddress> BillingAddresses { get; set; } = new List<BillingAddress>();
+
+    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
+
+    public virtual ICollection<Wishlist> Wishlists { get; set; } = new List<Wishlist>();
 }

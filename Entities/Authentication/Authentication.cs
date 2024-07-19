@@ -7,7 +7,7 @@ namespace e_commmerce.Entities.Authentication
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if (context.HttpContext.Session.GetString("User") == null) 
+            if (context.HttpContext.Session.GetString("UserUid") == null) 
             {
                 context.Result = new RedirectToRouteResult(
                     new RouteValueDictionary

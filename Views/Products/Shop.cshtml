@@ -123,18 +123,19 @@
                             </ul>
                         </div>
                         <div class="page_amount">
-                            <p>Showing 1–9 of @Model.Count results</p>
+                            <p>Showing @Model.Count results</p>
                         </div>
                         <div class="select_option">
                             <form asp-action="Shop" asp-controller="Products" method="get">
-                                <label>Sort By</label>
+                                    <button type="submit" style="border: none; font-size: 16px">
+                                    Sort By
+                                </button>
                                 <select name="orderby" id="short">
                                     <option value="position">Position</option>
                                     <option value="price-lowest">Price: Lowest</option>
                                     <option value="price-highest">Price: Highest</option>
                                     <option value="name-ascending">Product Name: A-Z</option>
                                 </select>
-                                <button type="submit">Sort</button>
                             </form>
                         </div>
                     </div>
@@ -142,7 +143,7 @@
                         <div id="product-list">
                             @Html.Partial("~/Views/Products/_ProductListPartial.cshtml")
                         </div>
-                        <button id="load-more-button" data-skip="6" data-take="6">Load More</button>
+                        <center id="load-more-button" data-skip="6" data-take="6">Load More</center>
                     </div>
                 </div>
                 </div>
@@ -163,18 +164,31 @@
                 slide: function (event, ui) {
                     $("#amount").val(ui.values[0] + "₫ - " + ui.values[1] + "₫");
                 },
-                change: function (event, ui) {
-                    var minPrice = ui.values[0];
-                    var maxPrice = ui.values[1];
-                    var url = new URL(window.location.href);
-                    url.searchParams.set('minPrice', minPrice);
-                    url.searchParams.set('maxPrice', maxPrice);
-                    window.location.href = url.href;
+                stop: function (event, ui) {
+                    filterProducts(ui.values[0], ui.values[1]);
                 }
             });
             $("#amount").val($("#slider-range").slider("values", 0) +
                 "₫ - " + $("#slider-range").slider("values", 1) + "₫");
         });
+
+        function filterProducts(minPrice, maxPrice) {
+            $.ajax({
+                url: "@Url.Action("FilterPrice", "Products")",
+                type: "GET",
+                data: {
+                    minPrice: minPrice,
+                    maxPrice: maxPrice
+                },
+                success: function (data) {
+                    $(".shop_tab_product").html(data);
+                },
+                error: function () {
+                    alert("An error occurred while filtering products.");
+                }
+            });
+        };
+
         $(document).ready(function () {
             $('#load-more-button').click(function () {
                 var skip = $(this).data('skip');
@@ -195,5 +209,23 @@
                 });
             });
         });
+        $(document).ready(function () {
+            $('.add-to-cart-btn').click(function (event) {
+                event.preventDefault();
+                var prodId = $(this).data('prod-id');
+                $.ajax({
+                    url: '@Url.Action("AddToCart", "Cart")',
+                    type: 'POST',
+                    data: { ProdId: prodId },
+                    success: function (response) {
+                        alert(response.message);
+                    },
+                    error: function () {
+                        alert("An error occurred while adding the product to the cart.");
+                    }
+                });
+            });
+        });
+
     </script>
 }
