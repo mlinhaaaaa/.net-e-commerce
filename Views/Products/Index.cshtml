@@ -68,6 +68,14 @@
                         <input type="file" class="form-control" id="productImage">
                     </div>
                     <div class="mb-3">
+                        <label for="productImage2" class="form-label">Image2</label>
+                        <input type="file" class="form-control" id="productImage2">
+                    </div>
+                    <div class="mb-3">
+                        <label for="productImage3" class="form-label">Image3</label>
+                        <input type="file" class="form-control" id="productImage3">
+                    </div>
+                    <div class="mb-3">
                         <label for="productPrice" class="form-label">Price</label>
                         <input type="number" class="form-control" id="productPrice">
                     </div>
@@ -167,6 +175,8 @@
             var formData = new FormData();
             formData.append("name", $("#productName").val());
             formData.append("imageFile", $("#productImage")[0].files[0]);
+            formData.append("imageFile2", $("#productImage2")[0].files[0]);
+            formData.append("imageFile3", $("#productImage3")[0].files[0]);
             formData.append("price", $("#productPrice").val());
             formData.append("size", $("#productSize").val());
             formData.append("description", $("#productDescription").val());
@@ -201,6 +211,8 @@
             formData.append("id", $("#productId_edit").val());
             formData.append("name", $("#productName_edit").val());
             formData.append("imageFile", $("#productImage_edit")[0].files[0]);
+            formData.append("imageFile2", $("#productImage2_edit")[0].files[0]);
+            formData.append("imageFile3", $("#productImage3_edit")[0].files[0]);
             formData.append("price", $("#productPrice_edit").val());
             formData.append("size", $("#productSize_edit").val());
             formData.append("description", $("#productDescription_edit").val());

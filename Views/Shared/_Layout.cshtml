@@ -47,6 +47,7 @@
                                 <li><a asp-controller="Wishlists" asp-action="Index" title="wishlist">My wishlist</a></li>
                                 <li><a asp-controller="Home" asp-action="Account" title="My account">My account</a></li>
                                 <li><a asp-controller="Cart" asp-action="Cart" title="My cart">My cart</a></li>
+
                                 @if (ViewBag.UserUid != null)
                                 {
                                     @if (ViewBag.IsAdmin)
@@ -72,7 +73,9 @@
                     <!--logo start-->
                     <div class="col-lg-3 col-md-3">
                         <div class="logo">
-                            <a href="index.html"><img src="~/img/logo/logo.jpg.png" alt=""></a>
+                            <a asp-area="" asp-controller="Home" asp-action="Index">
+                                <img src="~/img/logo/logo.jpg.png" alt="">
+                            </a>
                         </div>
                     </div>
                     <!--logo end-->
