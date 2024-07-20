@@ -10,6 +10,8 @@ public partial class Product
     public string Name { get; set; } = null!;
 
     public string ImagePath { get; set; } = null!;
+    public string? ImagePath2 { get; set; }
+    public string? ImagePath3 { get; set; }
 
     public decimal Price { get; set; }
 

@@ -29,13 +29,22 @@ namespace e_commmerce.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(string name, IFormFile imageFile, decimal price, string size, string description, int cateId)
+        public async Task<IActionResult> Create(string name, IFormFile imageFile, IFormFile imageFile2, IFormFile imageFile3, decimal price, string size, string description, int cateId)
         {
+            if (string.IsNullOrEmpty(name) || price <= 0 || cateId <= 0)
+            {
+                return BadRequest("Invalid product data.");
+            }
+
+            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+            Directory.CreateDirectory(uploadsFolder);
+
             string imagePath = null;
+            string imagePath2 = null;
+            string imagePath3 = null;   
+
             if (imageFile != null)
             {
-                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                Directory.CreateDirectory(uploadsFolder);
                 imagePath = Path.Combine(uploadsFolder, imageFile.FileName);
                 using (var fileStream = new FileStream(imagePath, FileMode.Create))
                 {
@@ -44,10 +53,32 @@ namespace e_commmerce.Controllers
                 imagePath = "/images/" + imageFile.FileName;
             }
 
+            if (imageFile2 != null)
+            {
+                imagePath2 = Path.Combine(uploadsFolder, imageFile2.FileName);
+                using (var fileStream = new FileStream(imagePath2, FileMode.Create))
+                {
+                    await imageFile2.CopyToAsync(fileStream);
+                }
+                imagePath2 = "/images/" + imageFile2.FileName;
+            }
+
+            if (imageFile3 != null)
+            {
+                imagePath3 = Path.Combine(uploadsFolder, imageFile3.FileName);
+                using (var fileStream = new FileStream(imagePath3, FileMode.Create))
+                {
+                    await imageFile3.CopyToAsync(fileStream);
+                }
+                imagePath3 = "/images/" + imageFile3.FileName;
+            }
+
             Product product = new Product()
             {
                 Name = name,
                 ImagePath = imagePath,
+                ImagePath2 = imagePath2,
+                ImagePath3 = imagePath3,
                 Price = price,
                 Size = size,
                 Description = description,
@@ -55,7 +86,7 @@ namespace e_commmerce.Controllers
             };
 
             _context.Products.Add(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok(product);
         }
 
@@ -71,7 +102,7 @@ namespace e_commmerce.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, string name, IFormFile imageFile, decimal price, string size, string description, int cateId)
+        public async Task<IActionResult> Edit(int id, string name,  IFormFile imageFile, IFormFile imageFile2, IFormFile imageFile3, decimal price, string size, string description, int cateId)
         {
             var product = _context.Products.FirstOrDefault(x => x.Id == id);
             if (product == null)
@@ -79,11 +110,15 @@ namespace e_commmerce.Controllers
                 return BadRequest();
             }
 
+            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+            Directory.CreateDirectory(uploadsFolder);
+
             string imagePath = product.ImagePath;
+            string imagePath2 = product.ImagePath2;
+            string imagePath3 = product.ImagePath3;
+
             if (imageFile != null)
             {
-                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                Directory.CreateDirectory(uploadsFolder);
                 imagePath = Path.Combine(uploadsFolder, imageFile.FileName);
                 using (var fileStream = new FileStream(imagePath, FileMode.Create))
                 {
@@ -92,14 +127,37 @@ namespace e_commmerce.Controllers
                 imagePath = "/images/" + imageFile.FileName;
             }
 
+            if (imageFile2 != null)
+            {
+                imagePath2 = Path.Combine(uploadsFolder, imageFile2.FileName);
+                using (var fileStream = new FileStream(imagePath2, FileMode.Create))
+                {
+                    await imageFile2.CopyToAsync(fileStream);
+                }
+                imagePath2 = "/images/" + imageFile2.FileName;
+            }
+
+            if (imageFile3 != null)
+            {
+                imagePath3 = Path.Combine(uploadsFolder, imageFile3.FileName);
+                using (var fileStream = new FileStream(imagePath3, FileMode.Create))
+                {
+                    await imageFile3.CopyToAsync(fileStream);
+                }
+                imagePath3 = "/images/" + imageFile3.FileName;
+            }
+
+
             product.Name = name;
             product.ImagePath = imagePath;
+            product.ImagePath2 = imagePath2;
+            product.ImagePath3 = imagePath3;
             product.Price = price;
             product.Size = size;
             product.Description = description;
             product.CateId = cateId;
             _context.Products.Update(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok(product);
         }
 
@@ -179,6 +237,17 @@ namespace e_commmerce.Controllers
                 return Json(new { success = false, message = "No more products." });
             }
             return PartialView("_ProductListPartial", products);
+        }
+
+        public IActionResult SingleProduct(int id)
+        {
+            var product = _context.Products.FirstOrDefault(x => x.Id == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
         }
     }
 }
