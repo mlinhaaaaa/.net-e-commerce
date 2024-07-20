@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using e_commmerce.Entities;
+using e_commmerce.Entities.Authentication;
 
 namespace e_commmerce.Controllers
 {
@@ -18,152 +19,54 @@ namespace e_commmerce.Controllers
             _context = context;
         }
 
-        // GET: Wishlists
+        [Authentication]
         public async Task<IActionResult> Index()
         {
-            var shopContext = _context.Wishlists.Include(w => w.AccountU).Include(w => w.Product);
-            return View(await shopContext.ToListAsync());
-        }
-
-        // GET: Wishlists/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
+            int? userId = HttpContext.Session.GetInt32("UserUid");
+            if (userId == null)
             {
-                return NotFound();
+                return RedirectToAction("Login", "Access");
             }
 
-            var wishlist = await _context.Wishlists
-                .Include(w => w.AccountU)
-                .Include(w => w.Product)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (wishlist == null)
-            {
-                return NotFound();
-            }
+            var Items = await _context.Wishlists
+                .Include(c => c.Product)
+                .Where(c => c.AccountUid == userId.Value)
+                .ToListAsync();
 
-            return View(wishlist);
+            return View(Items);
         }
 
-        // GET: Wishlists/Create
-        public IActionResult Create()
-        {
-            ViewData["AccountUid"] = new SelectList(_context.Accounts, "Uid", "Uid");
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id");
-            return View();
-        }
-
-        // POST: Wishlists/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AccountUid,ProductId")] Wishlist wishlist)
+        public async Task<IActionResult> AddToWishlist(int ProdId)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(wishlist);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["AccountUid"] = new SelectList(_context.Accounts, "Uid", "Uid", wishlist.AccountUid);
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", wishlist.ProductId);
-            return View(wishlist);
-        }
-
-        // GET: Wishlists/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
+            var product = await _context.Products.FindAsync(ProdId);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            var wishlist = await _context.Wishlists.FindAsync(id);
-            if (wishlist == null)
+            int? userId = HttpContext.Session.GetInt32("UserUid");
+            if (userId == null)
             {
-                return NotFound();
-            }
-            ViewData["AccountUid"] = new SelectList(_context.Accounts, "Uid", "Uid", wishlist.AccountUid);
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", wishlist.ProductId);
-            return View(wishlist);
-        }
-
-        // POST: Wishlists/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountUid,ProductId")] Wishlist wishlist)
-        {
-            if (id != wishlist.Id)
-            {
-                return NotFound();
+                return Unauthorized();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
+            var cartItem = await _context.Wishlists
+                .FirstOrDefaultAsync(ci => ci.AccountUid == userId.Value && ci.ProductId == ProdId);
+
+
+                cartItem = new Wishlist
                 {
-                    _context.Update(wishlist);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!WishlistExists(wishlist.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["AccountUid"] = new SelectList(_context.Accounts, "Uid", "Uid", wishlist.AccountUid);
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", wishlist.ProductId);
-            return View(wishlist);
-        }
-
-        // GET: Wishlists/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var wishlist = await _context.Wishlists
-                .Include(w => w.AccountU)
-                .Include(w => w.Product)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (wishlist == null)
-            {
-                return NotFound();
-            }
-
-            return View(wishlist);
-        }
-
-        // POST: Wishlists/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var wishlist = await _context.Wishlists.FindAsync(id);
-            if (wishlist != null)
-            {
-                _context.Wishlists.Remove(wishlist);
-            }
+                    AccountUid = userId.Value,
+                    ProductId = ProdId,
+                };
+                _context.Wishlists.Add(cartItem);
+            
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return Ok(new { message = "Product added to wish list successfully" });
         }
 
-        private bool WishlistExists(int id)
-        {
-            return _context.Wishlists.Any(e => e.Id == id);
-        }
     }
 }

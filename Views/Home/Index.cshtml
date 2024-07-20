@@ -158,7 +158,7 @@
                                             </div>
                                             <div class="product_info">
                                                 <ul>
-                                                    <li><a href="#" title=" Add to Wishlist ">Add to Wishlist</a></li>
+                                                    <li><a href="#" class="add-to-wishlist" data-prod-id="@product.Id" title="Add to Wishlist">Add to Wishlist</a></li>
                                                     <li><a href="#" data-toggle="modal" data-target="#modal_box" title="Quick view">View Detail</a></li>
                                                 </ul>
                                             </div>
@@ -193,7 +193,7 @@
                                             </div>
                                             <div class="product_info">
                                                 <ul>
-                                                    <li><a href="#" title=" Add to Wishlist ">Add to Wishlist</a></li>
+                                                    <li><a href="#" class="add-to-wishlist" data-prod-id="@product.Id" title="Add to Wishlist">Add to Wishlist</a></li>
                                                     <li><a href="#" data-toggle="modal" data-target="#modal_box" title="Quick view">View Detail</a></li>
                                                 </ul>
                                             </div>
@@ -315,6 +315,25 @@
             $('.add-to-cart').click(function () {
                 var prodId = $(this).data('prod-id');
                 addToCart(prodId);
+            });
+        });
+        $(document).ready(function () {
+            function AddToWishlist(prodId) {
+                $.ajax({
+                    url: '@Url.Action("AddToWishlist", "Wishlists")',
+                    type: 'POST',
+                    data: { prodId: prodId },
+                    success: function (response) {
+                        alert(response.message);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error adding to wishlist:', error);
+                    }
+                });
+            }
+            $('.add-to-wishlist').click(function () {
+                var prodId = $(this).data('prod-id');
+                AddToWishlist(prodId);
             });
         });
     </script>

@@ -1,0 +1,121 @@
+﻿
+@{
+    ViewData["Title"] = "Wish lists";
+    Layout = "_Layout";
+}
+<!-- Add your site or application content here -->
+<!--pos page start-->
+<div class="pos_page">
+    <div class="container">
+        <!--pos page inner-->
+        <div class="pos_page_inner">
+            <!--breadcrumbs area start-->
+            <div class="breadcrumbs_area">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadcrumb_content">
+                            <ul>
+                                <li><a href="index.html">home</a></li>
+                                <li><i class="fa fa-angle-right"></i></li>
+                                <li>wishlist</li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--breadcrumbs area end-->
+            <!--shopping cart area start -->
+            <div class="shopping_cart_area">
+                <form action="#">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table_desc wishlist">
+                                <div class="cart_page table-responsive">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th class="product_remove">Delete</th>
+                                                <th class="product_thumb">Image</th>
+                                                <th class="product_name">Product</th>
+                                                <th class="product-price">Price</th>
+                                                <th class="product_total">Add To Cart</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                @foreach (var item in Model)
+                                                {
+                                                <tr>
+                                                    <td class="product_remove">
+                                                        <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
+                                                            <input type="hidden" name="cartItemId" value="@item.Id" />
+                                                            <button type="submit">Xóa</button>
+                                                        </form>
+                                                    </td>
+                                                    <td class="product_thumb">
+                                                        <a><img src="@item.Product.ImagePath" alt="Product Image" style="width:100%;height: 250px;object-fit: cover"></a>
+                                                    </td>
+                                                    <td class="product_name">
+                                                        <a href="#">@item.Product.Name</a>
+                                                    </td>
+                                                    <td class="product-price">
+                                                        @item.Product.Price.ToString("#,#")₫
+                                                    </td>
+                                                    <td class="product_total"><a class="add-to-cart" data-prod-id="@item.Product.Id">Add To Cart</a></td>
+                                                </tr>
+                                                }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="wishlist-share">
+                            <h4>Share on:</h4>
+                            <ul>
+                                <li><a href="#"><i class="fa fa-rss"></i></a></li>
+                                <li><a href="#"><i class="fa fa-vimeo"></i></a></li>
+                                <li><a href="#"><i class="fa fa-tumblr"></i></a></li>
+                                <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+                                <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--shopping cart area end -->
+
+        </div>
+        <!--pos page inner end-->
+    </div>
+</div>
+<!--pos page end-->
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            function addToCart(prodId) {
+                $.ajax({
+                    url: '@Url.Action("AddToCart", "Cart")',
+                    type: 'POST',
+                    data: { prodId: prodId },
+                    success: function (response) {
+                        alert(response.message);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error adding to cart:', error);
+                    }
+                });
+            }
+            $('.add-to-cart').click(function () {
+                var prodId = $(this).data('prod-id');
+                addToCart(prodId);
+            });
+        });
+    </script>
+}

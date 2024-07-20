@@ -226,6 +226,24 @@
                 });
             });
         });
-
+        $(document).ready(function () {
+            function AddToWishlist(prodId) {
+                $.ajax({
+                    url: '@Url.Action("AddToWishlist", "Wishlists")',
+                    type: 'POST',
+                    data: { prodId: prodId },
+                    success: function (response) {
+                        alert(response.message);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error adding to wishlist:', error);
+                    }
+                });
+            }
+            $('.add-to-wishlist').click(function () {
+                var prodId = $(this).data('prod-id');
+                AddToWishlist(prodId);
+            });
+        });
     </script>
 }

@@ -39,7 +39,7 @@
                                                 <a href="#">@item.Product.Name</a>
                                             </td>
                                             <td class="product-price">
-                                                $@item.Product.Price
+                                                @item.Product.Price.ToString("#,#")₫
                                             </td>
                                             <td class="product_quantity">
                                                 <form asp-action="UpdateQuantity" asp-controller="Cart" method="post">
