@@ -15,6 +15,22 @@ public class CartController : Controller
         _context = context;
     }
 
+    public async Task<IActionResult> Checkout()
+    {
+        int? userId = HttpContext.Session.GetInt32("UserUid");
+        if (userId == null)
+        {
+            return RedirectToAction("Login", "Access");
+        }
+
+        var cartItems = await _context.Carts
+            .Include(c => c.Product)
+            .Where(c => c.AccountUid == userId.Value)
+            .ToListAsync();
+
+        return View(cartItems);
+    }
+
     [Authentication]
     public async Task<IActionResult> Cart()
     {
